@@ -15,6 +15,7 @@
 #include <cstring>
 #include <cstdlib>
 #include <iostream>
+#include <random>
 
 // reference - Operating system concepts textbook (8/e International edition, p106)
 class TaskStruct { // process control block
@@ -44,8 +45,6 @@ DoublyLinkedList *rq_front, *rq_rear;    // ready queue
 DoublyLinkedList *wq_front, *wq_rear;    // waiting queue
 DoublyLinkedList *ioq_front, *ioq_rear;  // i/o queue
 
-TaskStruct* child_list[10];
-
 void initialize() {
     // make ready, waiting, i/o queues
     rq_front = new DoublyLinkedList;
@@ -63,6 +62,7 @@ void initialize() {
     ioq_rear->left = ioq_front;
 }
 
+TaskStruct* child_list[10];
 unsigned int time_quantum;
 
 TaskStruct* createChild(pid_t parent_pid) {
@@ -84,14 +84,15 @@ TaskStruct* createChild(pid_t parent_pid) {
     return pcb;
 }
 
-int main() {
-    initialize();
+void createChildren() {
     pid_t main_pid = getpid();
 
-    for(int i=0;i<=10;++i) {
+    for(int i=0;i<10;++i) {
         if(getpid() == main_pid) {
             // parent process
+            //if(i < 10 && getpid() == main_pid) {
             child_list[i] = createChild(main_pid);
+            //}
             if(getpid() == main_pid) {
                 // parent process
                 std::cout << i << "th process created, " << child_list[i]->pid << std::endl;
@@ -103,11 +104,27 @@ int main() {
         }
     }
 
+    std::cout << "hi from " << getpid() << std::endl;
+}
+
+int main() {
+    initialize();
+
+    // random number generator - reference: https://modoocode.com/304
+    std::random_device rd0;
+    std::mt19937 gen(rd0());
+    std::uniform_int_distribution<int> rand_distrib(0, 999);
+
+    pid_t main_pid = getpid();
+    std::cout << "main is " << main_pid << std::endl;
+
+    createChildren();
     if(getpid() == main_pid) {
         // parent process
         for(int i=0;i<10;++i) {
             std::cout << child_list[i]->pid << ' ';
         }
+        std::cout << std::endl;
     } else {
         // child process
         std::cout << getpid() << std::endl;
