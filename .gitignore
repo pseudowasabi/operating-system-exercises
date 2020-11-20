@@ -1,3 +1,5 @@
 /report_3
 *.out
 /.vscode
+/simple_scheduling/scheduling.out.dSYM/*
+/simple_scheduling/*.out
