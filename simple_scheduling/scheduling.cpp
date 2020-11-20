@@ -11,6 +11,7 @@
 #include <sys/types.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
+#include <sys/time.h>
 
 #include <cstring>
 #include <cstdlib>
@@ -52,7 +53,7 @@ DoublyLinkedList *wq_front, *wq_rear;    // waiting queue (= i/o queue)
 int msg_que_id;
 
 void initialize(key_t& main_key) {
-    // make ready, waiting, i/o queues
+    // 1. make ready, waiting(i/o) queues
     rq_front = new DoublyLinkedList;
     rq_rear = new DoublyLinkedList;
     wq_front = new DoublyLinkedList;
@@ -63,8 +64,9 @@ void initialize(key_t& main_key) {
     wq_front->right = wq_rear;
     wq_rear->left = wq_front;
 
-    // create message queue
-    main_key = ftok(".", 'a');  // reference - http://jullio.pe.kr/cs/lpg/lpg_6_4_1.html
+    // 2. create message queue
+    // reference - http://jullio.pe.kr/cs/lpg/lpg_6_4_1.html
+    main_key = ftok(".", 'a');
     msg_que_id = msgget(main_key, IPC_CREAT|0666);
 }
 
@@ -110,15 +112,18 @@ void createChildren() {
     //std::cout << "hi from " << getpid() << std::endl;
 }
 
-void timer(int signum) {
-    if(signum == SIGALRM) {
-        printf("tt.");
-    }
+bool alarm_signal = false;
+
+void timerHandler(int signum) {
+    static int alarm_cnt = 0;
+    ++alarm_cnt;
+
+    alarm_signal = true;
 }
 
 void parentProcess() {
     //  parent process TODOs
-    //  1. receive alarm signal(SIGALRM) by timer
+    //  1. receive alarm signal(SIGALRM/SIGVTALRM) by timer
     //  2. maintain run-queue(=ready queue, rq), wait-queue(=i/o queue, wq)
     //  3. perform scheduling of child processes
     //      3-1. check remain burst time
@@ -133,7 +138,34 @@ void parentProcess() {
     //  8. decrease time of all processes in I/O queue (waiting queue).
     //  9. ++ multiple queue (MLFQ based on priority)
 
-    std::cout << "here is parent" << std::endl;
+    //std::cout << "here is parent" << std::endl;
+
+    // setting a timer (time quantum to 250 ms at first).
+    // reference - https://linuxspot.tistory.com/28
+    struct sigaction sig_act;
+    struct itimerval timer_val;
+
+    memset(&sig_act, 0, sizeof(sig_act));
+    sig_act.sa_handler = &timerHandler;
+    sigaction(SIGVTALRM, &sig_act, NULL);
+
+    timer_val.it_value.tv_sec = 0;
+    timer_val.it_value.tv_usec = 250000;
+    timer_val.it_interval = timer_val.it_value; // it_interval is same as it_value.
+
+    setitimer(ITIMER_VIRTUAL, &timer_val, NULL);
+
+    int cnt = 0;
+    while(true) {
+        if(alarm_signal) {
+            alarm_signal = false;
+
+            ++cnt;
+            if(!(cnt % 4)) {
+                std::cout << int(cnt / 4) << " sec elapsed!\n";
+            }
+        }
+    }
 }
 
 void childProcess() {       
@@ -154,9 +186,6 @@ int main() {
 
     key_t main_key;
     initialize(main_key);
-
-    // set timer
-    signal(SIGALRM, timer);
 
     // random number generator - reference: https://modoocode.com/304
     std::random_device rd0;
