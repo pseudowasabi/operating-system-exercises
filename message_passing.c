@@ -23,14 +23,15 @@ int main(int argc, char* argv[]) {
     key_id = msgget((key_t)1234, IPC_CREAT|0666);
     if(!strncmp(argv[1], "send", 4)) {
         char msg_txt[] = "hello i am sending a message...";
-        my_message.msg_type = 1;
+        my_message.msg_type = 2;    // 여기 이 msg_type이랑...
         strncpy(my_message.msg_txt, msg_txt, sizeof(msg_txt));
 
         msgsnd(key_id, &my_message, sizeof(my_message.msg_txt), 0);
         puts("sent");
 
     } else if(!strncmp(argv[1], "receive", 7)) {
-        msgrcv(key_id, &my_message, sizeof(my_message.msg_txt), 1, 0);
+        msgrcv(key_id, &my_message, sizeof(my_message.msg_txt), 2, 0);  // ... 여기 뒤에서 두 번째 인자 2가 같아야 수신함.
+        // 마지막 flag가 0이면 blocking, IPC_NOWAIT이면 non-blocking (msgsnd에서 마지막 인자도 같은 역할)
         puts("recv:");
         puts(my_message.msg_txt);
 
