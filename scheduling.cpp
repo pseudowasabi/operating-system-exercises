@@ -26,7 +26,10 @@
 #include <iostream>
 #include <random>
 #include <string>
+#include <fstream>
 using namespace std;
+
+ofstream fout("schedule_dump.txt");
 
 struct msg_buffer {     // message buffer for IPC
     long msg_type;      // set msg_type as pid of destination process.
@@ -38,6 +41,7 @@ class TaskStruct { // process control block
 public:
     pid_t pid, parent_pid;
     unsigned int cpu_burst[2], io_burst, cpu_burst_flag;
+    unsigned int origin_burst_time;
     // [running order] cpu_burst[0] -> io_burst -> cpu_burst[1]
     // ** ASSUMING there is ONLY 1 I/O REQUEST (io_burst) in each child process.
 
@@ -53,6 +57,7 @@ public:
         this->cpu_burst[1] = _cpu_burst_1;
         this->state = 0;
         this->cpu_burst_flag = 0;
+        this->origin_burst_time = this->cpu_burst[0] + this->cpu_burst[1] + this->io_burst;
     }
 };
 
@@ -87,7 +92,7 @@ void initialize(key_t& main_key, unsigned int& msg_que_id, unsigned int& time_qu
     msg_que_id = msgget(main_key, IPC_CREAT|0666);
 
     // 3. set time quantum (unit: ms)
-    time_quantum = 500;
+    time_quantum = 100;
 }
 
 void createChildren(int num_of_child_process) {
@@ -100,6 +105,7 @@ void createChildren(int num_of_child_process) {
             if(child_pid > 0) {
                 // parent process
                 cout << i + 1 << "th process created, " << child_pid << endl;
+                fout << i + 1 << "th process created, " << child_pid << endl;
             }
         }
     }
@@ -132,16 +138,20 @@ void stringParsing(string& msg_txt, char& type, pid_t& pid_info, void *data_0, v
     pid_info = stoi(msg_txt.substr(1, pos - 1));
     msg_txt = msg_txt.substr(pos+1);
     pos = msg_txt.find(",");
-    if(type == 'R') {                       // Register new child process
+    /*if(type == 'R') {                       // Register new child process
         *(unsigned int *)data_0 = stoi(msg_txt.substr(0, pos));
         *(unsigned int *)data_1 = stoi(msg_txt.substr(pos+1));
-    } else if(type == 'D' || type == 'I') { // Dispatch or I/O request
+    } else */
+    if(type == 'D' || type == 'I') { // Dispatch or I/O request
         *(unsigned int *)data_0 = stoi(msg_txt.substr(0, pos));
         if(sizeof(size_t) == 4) {
             *(size_t *)data_1 = stoi(msg_txt.substr(pos+1));
         } else if(sizeof(size_t) == 8) {
             *(size_t *)data_1 = stoll(msg_txt.substr(pos+1));
         }   
+    } else {
+        cout << "!! An error occurs in stringParsing overloaded function.";
+        fout << "!! An error occurs in stringParsing overloaded function.";
     }
 }
 
@@ -161,6 +171,7 @@ void stringParsing(string& msg_txt, char& type, pid_t& pid_info, void *data_0, v
         *(unsigned int *)data_2 = stoi(msg_txt.substr(pos+1));
     } else {
         cout << "!! An error occurs in stringParsing overloaded function.";
+        fout << "!! An error occurs in stringParsing overloaded function.";
     }
 }
 
@@ -175,6 +186,7 @@ void processWaitingQueue(unsigned int time_quantum) {
             
             pcb->io_burst = 0;
             cout << pcb->pid << " io_burst is " << pcb->io_burst << " (DONE)\n";
+            fout << pcb->pid << " io_burst is " << pcb->io_burst << " (DONE)\n";
 
             // delete from waiting queue
             it->left->right = it->right;
@@ -190,9 +202,18 @@ void processWaitingQueue(unsigned int time_quantum) {
         }
     }
 
-    for(DoublyLinkedList *it=wq_front->right; it != wq_rear; it = it->right) {
-        cout << "(" << it->process_info->pid << "," << it->process_info->io_burst << ")->";
+    // print current status of waiting queue.
+    cout << "** waiting queue: ";
+    fout << "** waiting queue: ";
+    if(wq_front->right != wq_rear) {
+        for(DoublyLinkedList *it=wq_front->right; it != wq_rear; it = it->right) {
+            fout << "(" << it->process_info->pid << "," << it->process_info->io_burst << ")->";
+            cout << "(" << it->process_info->pid << "," << it->process_info->io_burst << ")->";
+        }
+        fout << "[rear]";
+        cout << "[rear]";
     }
+    fout << endl;
     cout << endl;
 }
 
@@ -209,7 +230,7 @@ void parentProcess(unsigned int msg_que_id, unsigned int time_quantum) {
     //
     //  (Opt.)
     //  5.  receive IPC messages from child process, check if child process begins I/O burst.   --> implemented.
-    //  6.  then, take out of ready queue, and moves to i/o waiting queue.                      --> not fully implemented.
+    //  6.  then, take out of ready queue, and moves to i/o waiting queue.                      --> implemented. (assuming 1 i/o request)
     //      (CANNOT be scheduled until I/O completion)
     //  7.  parent process saves I/O burst time of each child processes.                        --> implemented. 
     //  8.  decrease time of all processes in I/O queue (waiting queue).                        --> implemented.
@@ -237,12 +258,6 @@ void parentProcess(unsigned int msg_que_id, unsigned int time_quantum) {
     // final elapsed time is elapsed_time_by_timer - time_diff
     // time_diff is calculated by some child process which (remain burst time) < (universal time quantum).
 
-    /*
-     cout << "in linked list" <<  endl;
-    for(DoublyLinkedList *it=rq_front->right;it->right != nullptr;it = it->right) {
-         cout << "ddl " << (it->process_info)->pid <<  endl;
-    }*/
-
     struct msg_buffer send_msg, recv_msg;
     string tmp_txt;
     char type;
@@ -256,7 +271,7 @@ void parentProcess(unsigned int msg_que_id, unsigned int time_quantum) {
         ssize_t msg_len = msgrcv(msg_que_id, &recv_msg, sizeof(recv_msg.msg_txt), getpid(), IPC_NOWAIT);
 
         if(msg_len > 0) {
-            cout << recv_msg.msg_txt << endl;
+            //cout << recv_msg.msg_txt << endl;
             if(recv_msg.msg_txt[0] != 'R') {
                 continue;
             }
@@ -264,26 +279,35 @@ void parentProcess(unsigned int msg_que_id, unsigned int time_quantum) {
             unsigned int _cpu_burst_0, _io_burst, _cpu_burst_1;
             stringParsing(tmp_txt, type, child_pid, &_cpu_burst_0, &_io_burst, &_cpu_burst_1);
             
+            fout << "child_pid: " << child_pid << " cpu_burst_0: " << _cpu_burst_0 << " io_burst: " << _io_burst << " cpu_burst_1: " << _cpu_burst_1 << endl;
             cout << "child_pid: " << child_pid << " cpu_burst_0: " << _cpu_burst_0 << " io_burst: " << _io_burst << " cpu_burst_1: " << _cpu_burst_1 << endl;
             TaskStruct *pcb = createPCB(child_pid, getpid(), _cpu_burst_0, _io_burst, _cpu_burst_1);
+            fout << pcb->pid << " is registered!" << endl;
             cout << pcb->pid << " is registered!" << endl;
 
             process_cnt ++;
         }
     }
+    fout << endl;
+    cout << endl;
 
-    cout << "initial status of ready queue" << endl;
+    fout << "[parent] initial status of ready queue" << endl;
+    cout << "[parent] initial status of ready queue" << endl;
     for(DoublyLinkedList *it = rq_front->right; it != rq_rear; it = it->right) {
         TaskStruct *ts = it->process_info;
+        fout << "RQ: " << ts->pid << " " << ts->cpu_burst[0] << " " << ts->io_burst << " " << ts->cpu_burst[1] << endl;
         cout << "RQ: " << ts->pid << " " << ts->cpu_burst[0] << " " << ts->io_burst << " " << ts->cpu_burst[1] << endl;
     }
+    fout << endl;
+    cout << endl;
 
     while(true) {
         if(alarm_signal) {
             alarm_signal = false;
 
             elapsed_time_by_timer += time_quantum;  // time_quantum is universal time quantum calculated using timer.
-            cout << elapsed_time_by_timer << " elapsed\n";
+            fout << "\n$ " << int(elapsed_time_by_timer / time_quantum) << "th(st, nd, rd) time-tick!\n";
+            cout << "\n$ " << int(elapsed_time_by_timer / time_quantum) << "th(st, nd, rd) time-tick!\n";
 
             // child process scheduling
             if(rq_front->right == rq_rear) {
@@ -333,8 +357,29 @@ void parentProcess(unsigned int msg_que_id, unsigned int time_quantum) {
                 } else {
                     // no remaining cpu_burst -> moves to i/o waiting queue in start of next time quantum.
                     // parent process receives IPC message when remaining cpu burst time of child process becomes 0.
+                    if(dispatched_task->cpu_burst_flag == 1) {
+                        // "the" child process(dispatched_task) is DONE.
+                        fout << "[parent] child of " << dispatched_task->pid << " is DONE, waiting time: " << elapsed_time_by_timer - time_diff - dispatched_task->origin_burst_time << endl;
+                        cout << "[parent] child of " << dispatched_task->pid << " is DONE, waiting time: " << elapsed_time_by_timer - time_diff - dispatched_task->origin_burst_time << endl;
+                        // (elapsed_time_by_timer - time_diff) is turnaround time, so that we can get waiting time by subtract origin_burst_time (sum of all type of burst times).
+                    }
                 }    
             }
+
+            // print ready queue
+            // print current status of ready queue.
+            fout << "** ready queue: ";
+            cout << "** ready queue: ";
+            if(rq_front->right != rq_rear) {
+                for(DoublyLinkedList *it=rq_front->right; it != rq_rear; it = it->right) {
+                    fout << "(" << it->process_info->pid << "," << it->process_info->cpu_burst[it->process_info->cpu_burst_flag] << ")->";
+                    cout << "(" << it->process_info->pid << "," << it->process_info->cpu_burst[it->process_info->cpu_burst_flag] << ")->";
+                }
+                fout << "[rear]";
+                cout << "[rear]";
+            }
+            fout << endl;
+            cout << endl;
 
             processWaitingQueue(time_quantum);  // decrease i/o burst of each pcb in waiting queues.
 
@@ -366,8 +411,14 @@ void parentProcess(unsigned int msg_que_id, unsigned int time_quantum) {
         }
     }
 
+    fout << "** ALL SCHEDULING DONE, time elapsed: " << elapsed_time_by_timer - time_diff << endl;
+    cout << "** ALL SCHEDULING DONE, time elapsed: " << elapsed_time_by_timer - time_diff << endl;
     msgctl(msg_que_id, IPC_RMID, NULL); // delete message queue
+    fout << "message queue is deleted !\n";
     cout << "message queue is deleted !\n";
+
+    fout.close();
+    cout << "All result is saved in ./schedule_dump.txt .\n";
 }
 
 void childProcess(pid_t parent_pid, unsigned int msg_que_id) {
@@ -393,15 +444,16 @@ void childProcess(pid_t parent_pid, unsigned int msg_que_id) {
     // random number generator - reference: https://modoocode.com/304
     random_device rd0; // , rd1;
     mt19937 gen0(rd0()); // , gen1(rd1());
-    uniform_int_distribution<int> rand_distrib0(0, 2999), rand_distrib1(0, 999);
-    // cpu_burst range to [0, 1000), io_burst range to [0, 100).
+    uniform_int_distribution<int> rand_distrib0(500, 1499), rand_distrib1(100, 499);
+    // cpu_burst range to [500, 1500), io_burst range to [100, 500).
     size_t pcb_address;
 
     unsigned int cpu_burst[2], io_burst;
     cpu_burst[0] = rand_distrib0(gen0);
     io_burst = rand_distrib1(gen0);
     cpu_burst[1] = rand_distrib0(gen0);
-    cout << "* burst time generated: " << getpid() << " " << cpu_burst[0] << " " << io_burst << " " << cpu_burst[1] << endl;
+    fout << "* burst time generated (pid cpu_burst_0 io_burst cpu_burst_1): " << getpid() << " " << cpu_burst[0] << " " << io_burst << " " << cpu_burst[1] << endl;
+    cout << "* burst time generated (pid cpu_burst_0 io_burst cpu_burst_1): " << getpid() << " " << cpu_burst[0] << " " << io_burst << " " << cpu_burst[1] << endl;
 
     // [Register] message(msg_txt) format:
     // Rmy_pid,cpu_burst_0,io_burst,cpu_burst_1
@@ -412,7 +464,7 @@ void childProcess(pid_t parent_pid, unsigned int msg_que_id) {
     string tmp_txt = "R" + to_string(getpid()) + "," + to_string(cpu_burst[0]) + "," + to_string(io_burst) + "," + to_string(cpu_burst[1]) + '\0';
     strncpy(send_msg.msg_txt, tmp_txt.c_str(), tmp_txt.length() + 1);
     msgsnd(msg_que_id, &send_msg, sizeof(send_msg.msg_txt), IPC_NOWAIT);
-    //std::cout << getpid() << " " << send_msg.msg_type << " " << send_msg.msg_txt << " sent!\n";
+    //cout << getpid() << " " << send_msg.msg_type << " " << send_msg.msg_txt << " sent!\n";
 
     // TODO 1 - infinite-loop
     unsigned int cb_flag = 0, cb_flag_1_changed = 0;
@@ -421,14 +473,13 @@ void childProcess(pid_t parent_pid, unsigned int msg_que_id) {
         // reference 2 - https://lacti.github.io/2011/01/08/different-between-size-t-ssize-t/
         ssize_t msg_len = msgrcv(msg_que_id, &recv_msg, sizeof(recv_msg.msg_txt), getpid(), IPC_NOWAIT);
 
-        // cout << "rcv " << msg_len <<  endl;
-
         if(msg_len > 0) {
             // receive something from parent process !! -> means SCHEDULED now!
             //cout << "recv: " << getpid() << ": " << recv_msg.msg_txt <<  endl;
 
             if(cb_flag == 1 && cb_flag_1_changed == 0) {
                 cb_flag_1_changed = 1;
+                fout << "## second cpu burst of " << getpid() << " started !\n";
                 cout << "## second cpu burst of " << getpid() << " started !\n";
             }
 
@@ -438,7 +489,9 @@ void childProcess(pid_t parent_pid, unsigned int msg_que_id) {
             unsigned int _time_quantum;
 
             stringParsing(tmp_txt, type, _0, &_time_quantum, &pcb_address);
-            cout << "recv: " << getpid() << " " << type << " " << _time_quantum << " " << cpu_burst[cb_flag] << endl;
+            //cout << "recv: " << getpid() << " " << type << " " << _time_quantum << " " << cpu_burst[cb_flag] << endl;
+            fout << "[child] pid: " << getpid() << ", remaining cpu_burst[" << cb_flag << "]: " << cpu_burst[cb_flag] - _time_quantum << endl;
+            cout << "[child] pid: " << getpid() << ", remaining cpu_burst[" << cb_flag << "]: " << cpu_burst[cb_flag] - _time_quantum << endl;
 
             // TODO 2 - decrease cpu_burst
             
@@ -446,10 +499,10 @@ void childProcess(pid_t parent_pid, unsigned int msg_que_id) {
             // (each process would vary since remain cpu_burst could be lower than time_quantum)
 
             cpu_burst[cb_flag] -= _time_quantum;
-            //DoublyLinkedList *dispatched_task_ptr = (DoublyLinkedList *)pcb_address;
-            //TaskStruct *dispatched_task = dispatched_task_ptr->process_info;
-            //dispatched_task->cpu_burst -= _time_quantum;
-            
+            /*
+            DoublyLinkedList *dispatched_task_ptr = (DoublyLinkedList *)pcb_address;
+            TaskStruct *dispatched_task = dispatched_task_ptr->process_info;
+            dispatched_task->cpu_burst -= _time_quantum;*/
             // pcb access by parent, child process concurrently --> error occurs!
 
             if(cpu_burst[cb_flag] == 0) {
@@ -464,25 +517,32 @@ void childProcess(pid_t parent_pid, unsigned int msg_que_id) {
                 strncpy(send_msg.msg_txt, tmp_txt.c_str(), tmp_txt.length() + 1);
 
                 msgsnd(msg_que_id, &send_msg, sizeof(send_msg.msg_txt), IPC_NOWAIT);
-                cout << getpid() << "cpu_burst done!\n";
+                //cout << getpid() << "cpu_burst done!\n";
 
                 // local io_burst value is not updated.
                 // however, after cpu_burst become 0, above while loop terminated,
                 // then, parent process will manage "remaining io_burst value of PCB" in waiting queue.
-                cout << "** Remaining CPU-burst time of " << getpid() << " is 0 now. This process moves to I/O waiting-queue.\n";
+                if(!cb_flag) {
+                    fout << "** Remaining CPU-burst[0] time of " << getpid() << " is 0 now. This process moves to I/O waiting-queue.\n";
+                    cout << "** Remaining CPU-burst[0] time of " << getpid() << " is 0 now. This process moves to I/O waiting-queue.\n";
+                } else {
+                    fout << "** Remaining CPU-burst[1] time of " << getpid() << " is 0 now\n";
+                    cout << "** Remaining CPU-burst[1] time of " << getpid() << " is 0 now\n";
+                }
 
                 cb_flag = 1;
             }
         }
     }
 
+    fout << getpid() << " child process is done!\n";
     cout << getpid() << " child process is done!\n";
-    // print waiting time.
 }
 
 int main() {
     pid_t main_pid = getpid();
-    cout << "main_pid is " << main_pid <<  endl;
+    fout << "main_pid is " << main_pid << endl;
+    cout << "main_pid is " << main_pid << endl;
 
     key_t main_key;
     unsigned int msg_que_id, time_quantum;
@@ -499,6 +559,7 @@ int main() {
         }
         cout <<  endl;
 */
+        fout << "message queue id is " << msg_que_id << endl;
         cout << "message queue id is " << msg_que_id << endl;
         parentProcess(msg_que_id, time_quantum);
     } else {

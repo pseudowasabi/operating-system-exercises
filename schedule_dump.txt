@@ -1,0 +1,1084 @@
+main_pid is 869
+1th process created, 870
+2th process created, 871
+3th process created, 872
+4th process created, 873
+5th process created, 874
+6th process created, 875
+7th process created, 876
+8th process created, 877
+9th process created, 878
+10th process created, 879
+message queue id is 229376
+* burst time generated (pid cpu_burst_0 io_burst cpu_burst_1): 879 1045 191 666
+* burst time generated (pid cpu_burst_0 io_burst cpu_burst_1): 878 743 155 741
+* burst time generated (pid cpu_burst_0 io_burst cpu_burst_1): 872 532 376 562
+* burst time generated (pid cpu_burst_0 io_burst cpu_burst_1): 873 1167 456 552
+* burst time generated (pid cpu_burst_0 io_burst cpu_burst_1): 875 984 244 1136
+* burst time generated (pid cpu_burst_0 io_burst cpu_burst_1): 874 1153 380 1491
+* burst time generated (pid cpu_burst_0 io_burst cpu_burst_1): 870 1309 279 960
+* burst time generated (pid cpu_burst_0 io_burst cpu_burst_1): 871 1279 404 773
+* burst time generated (pid cpu_burst_0 io_burst cpu_burst_1): 876 1374 153 783
+* burst time generated (pid cpu_burst_0 io_burst cpu_burst_1): 877 698 208 777
+child_pid: 879 cpu_burst_0: 1045 io_burst: 191 cpu_burst_1: 666
+879 is registered!
+child_pid: 872 cpu_burst_0: 532 io_burst: 376 cpu_burst_1: 562
+872 is registered!
+child_pid: 878 cpu_burst_0: 743 io_burst: 155 cpu_burst_1: 741
+878 is registered!
+child_pid: 873 cpu_burst_0: 1167 io_burst: 456 cpu_burst_1: 552
+873 is registered!
+child_pid: 875 cpu_burst_0: 984 io_burst: 244 cpu_burst_1: 1136
+875 is registered!
+child_pid: 874 cpu_burst_0: 1153 io_burst: 380 cpu_burst_1: 1491
+874 is registered!
+child_pid: 870 cpu_burst_0: 1309 io_burst: 279 cpu_burst_1: 960
+870 is registered!
+child_pid: 871 cpu_burst_0: 1279 io_burst: 404 cpu_burst_1: 773
+871 is registered!
+child_pid: 876 cpu_burst_0: 1374 io_burst: 153 cpu_burst_1: 783
+876 is registered!
+child_pid: 877 cpu_burst_0: 698 io_burst: 208 cpu_burst_1: 777
+877 is registered!
+
+[parent] initial status of ready queue
+RQ: 879 1045 191 666
+RQ: 872 532 376 562
+RQ: 878 743 155 741
+RQ: 873 1167 456 552
+RQ: 875 984 244 1136
+RQ: 874 1153 380 1491
+RQ: 870 1309 279 960
+RQ: 871 1279 404 773
+RQ: 876 1374 153 783
+RQ: 877 698 208 777
+
+
+$ 1th(st, nd, rd) time-tick!
+** ready queue: (872,532)->(878,743)->(873,1167)->(875,984)->(874,1153)->(870,1309)->(871,1279)->(876,1374)->(877,698)->(879,945)->[rear]
+** waiting queue: 
+[child] pid: 879, remaining cpu_burst[0]: 945
+
+$ 2th(st, nd, rd) time-tick!
+** ready queue: (878,743)->(873,1167)->(875,984)->(874,1153)->(870,1309)->(871,1279)->(876,1374)->(877,698)->(879,945)->(872,432)->[rear]
+** waiting queue: 
+[child] pid: 872, remaining cpu_burst[0]: 432
+
+$ 3th(st, nd, rd) time-tick!
+** ready queue: (873,1167)->(875,984)->(874,1153)->(870,1309)->(871,1279)->(876,1374)->(877,698)->(879,945)->(872,432)->(878,643)->[rear]
+** waiting queue: 
+[child] pid: 878, remaining cpu_burst[0]: 643
+
+$ 4th(st, nd, rd) time-tick!
+** ready queue: (875,984)->(874,1153)->(870,1309)->(871,1279)->(876,1374)->(877,698)->(879,945)->(872,432)->(878,643)->(873,1067)->[rear]
+** waiting queue: 
+[child] pid: 873, remaining cpu_burst[0]: 1067
+
+$ 5th(st, nd, rd) time-tick!
+** ready queue: (874,1153)->(870,1309)->(871,1279)->(876,1374)->(877,698)->(879,945)->(872,432)->(878,643)->(873,1067)->(875,884)->[rear]
+** waiting queue: 
+[child] pid: 875, remaining cpu_burst[0]: 884
+
+$ 6th(st, nd, rd) time-tick!
+** ready queue: (870,1309)->(871,1279)->(876,1374)->(877,698)->(879,945)->(872,432)->(878,643)->(873,1067)->(875,884)->(874,1053)->[rear]
+** waiting queue: 
+[child] pid: 874, remaining cpu_burst[0]: 1053
+
+$ 7th(st, nd, rd) time-tick!
+** ready queue: (871,1279)->(876,1374)->(877,698)->(879,945)->(872,432)->(878,643)->(873,1067)->(875,884)->(874,1053)->(870,1209)->[rear]
+** waiting queue: 
+[child] pid: 870, remaining cpu_burst[0]: 1209
+
+$ 8th(st, nd, rd) time-tick!
+** ready queue: (876,1374)->(877,698)->(879,945)->(872,432)->(878,643)->(873,1067)->(875,884)->(874,1053)->(870,1209)->(871,1179)->[rear]
+** waiting queue: 
+[child] pid: 871, remaining cpu_burst[0]: 1179
+
+$ 9th(st, nd, rd) time-tick!
+** ready queue: (877,698)->(879,945)->(872,432)->(878,643)->(873,1067)->(875,884)->(874,1053)->(870,1209)->(871,1179)->(876,1274)->[rear]
+** waiting queue: 
+[child] pid: 876, remaining cpu_burst[0]: 1274
+
+$ 10th(st, nd, rd) time-tick!
+** ready queue: (879,945)->(872,432)->(878,643)->(873,1067)->(875,884)->(874,1053)->(870,1209)->(871,1179)->(876,1274)->(877,598)->[rear]
+** waiting queue: 
+[child] pid: 877, remaining cpu_burst[0]: 598
+
+$ 11th(st, nd, rd) time-tick!
+** ready queue: (872,432)->(878,643)->(873,1067)->(875,884)->(874,1053)->(870,1209)->(871,1179)->(876,1274)->(877,598)->(879,845)->[rear]
+** waiting queue: 
+[child] pid: 879, remaining cpu_burst[0]: 845
+
+$ 12th(st, nd, rd) time-tick!
+** ready queue: (878,643)->(873,1067)->(875,884)->(874,1053)->(870,1209)->(871,1179)->(876,1274)->(877,598)->(879,845)->(872,332)->[rear]
+** waiting queue: 
+[child] pid: 872, remaining cpu_burst[0]: 332
+
+$ 13th(st, nd, rd) time-tick!
+** ready queue: (873,1067)->(875,884)->(874,1053)->(870,1209)->(871,1179)->(876,1274)->(877,598)->(879,845)->(872,332)->(878,543)->[rear]
+** waiting queue: 
+[child] pid: 878, remaining cpu_burst[0]: 543
+
+$ 14th(st, nd, rd) time-tick!
+** ready queue: (875,884)->(874,1053)->(870,1209)->(871,1179)->(876,1274)->(877,598)->(879,845)->(872,332)->(878,543)->(873,967)->[rear]
+** waiting queue: 
+[child] pid: 873, remaining cpu_burst[0]: 967
+
+$ 15th(st, nd, rd) time-tick!
+** ready queue: (874,1053)->(870,1209)->(871,1179)->(876,1274)->(877,598)->(879,845)->(872,332)->(878,543)->(873,967)->(875,784)->[rear]
+** waiting queue: 
+[child] pid: 875, remaining cpu_burst[0]: 784
+
+$ 16th(st, nd, rd) time-tick!
+** ready queue: (870,1209)->(871,1179)->(876,1274)->(877,598)->(879,845)->(872,332)->(878,543)->(873,967)->(875,784)->(874,953)->[rear]
+** waiting queue: 
+[child] pid: 874, remaining cpu_burst[0]: 953
+
+$ 17th(st, nd, rd) time-tick!
+** ready queue: (871,1179)->(876,1274)->(877,598)->(879,845)->(872,332)->(878,543)->(873,967)->(875,784)->(874,953)->(870,1109)->[rear]
+** waiting queue: 
+[child] pid: 870, remaining cpu_burst[0]: 1109
+
+$ 18th(st, nd, rd) time-tick!
+** ready queue: (876,1274)->(877,598)->(879,845)->(872,332)->(878,543)->(873,967)->(875,784)->(874,953)->(870,1109)->(871,1079)->[rear]
+** waiting queue: 
+[child] pid: 871, remaining cpu_burst[0]: 1079
+
+$ 19th(st, nd, rd) time-tick!
+** ready queue: (877,598)->(879,845)->(872,332)->(878,543)->(873,967)->(875,784)->(874,953)->(870,1109)->(871,1079)->(876,1174)->[rear]
+** waiting queue: 
+[child] pid: 876, remaining cpu_burst[0]: 1174
+
+$ 20th(st, nd, rd) time-tick!
+** ready queue: (879,845)->(872,332)->(878,543)->(873,967)->(875,784)->(874,953)->(870,1109)->(871,1079)->(876,1174)->(877,498)->[rear]
+** waiting queue: 
+[child] pid: 877, remaining cpu_burst[0]: 498
+
+$ 21th(st, nd, rd) time-tick!
+** ready queue: (872,332)->(878,543)->(873,967)->(875,784)->(874,953)->(870,1109)->(871,1079)->(876,1174)->(877,498)->(879,745)->[rear]
+** waiting queue: 
+[child] pid: 879, remaining cpu_burst[0]: 745
+
+$ 22th(st, nd, rd) time-tick!
+** ready queue: (878,543)->(873,967)->(875,784)->(874,953)->(870,1109)->(871,1079)->(876,1174)->(877,498)->(879,745)->(872,232)->[rear]
+** waiting queue: 
+[child] pid: 872, remaining cpu_burst[0]: 232
+
+$ 23th(st, nd, rd) time-tick!
+** ready queue: (873,967)->(875,784)->(874,953)->(870,1109)->(871,1079)->(876,1174)->(877,498)->(879,745)->(872,232)->(878,443)->[rear]
+** waiting queue: 
+[child] pid: 878, remaining cpu_burst[0]: 443
+
+$ 24th(st, nd, rd) time-tick!
+** ready queue: (875,784)->(874,953)->(870,1109)->(871,1079)->(876,1174)->(877,498)->(879,745)->(872,232)->(878,443)->(873,867)->[rear]
+** waiting queue: 
+[child] pid: 873, remaining cpu_burst[0]: 867
+
+$ 25th(st, nd, rd) time-tick!
+** ready queue: (874,953)->(870,1109)->(871,1079)->(876,1174)->(877,498)->(879,745)->(872,232)->(878,443)->(873,867)->(875,684)->[rear]
+** waiting queue: 
+[child] pid: 875, remaining cpu_burst[0]: 684
+
+$ 26th(st, nd, rd) time-tick!
+** ready queue: (870,1109)->(871,1079)->(876,1174)->(877,498)->(879,745)->(872,232)->(878,443)->(873,867)->(875,684)->(874,853)->[rear]
+** waiting queue: 
+[child] pid: 874, remaining cpu_burst[0]: 853
+
+$ 27th(st, nd, rd) time-tick!
+** ready queue: (871,1079)->(876,1174)->(877,498)->(879,745)->(872,232)->(878,443)->(873,867)->(875,684)->(874,853)->(870,1009)->[rear]
+** waiting queue: 
+[child] pid: 870, remaining cpu_burst[0]: 1009
+
+$ 28th(st, nd, rd) time-tick!
+** ready queue: (876,1174)->(877,498)->(879,745)->(872,232)->(878,443)->(873,867)->(875,684)->(874,853)->(870,1009)->(871,979)->[rear]
+[child] pid: 871, remaining cpu_burst[0]: 979
+** waiting queue: 
+
+$ 29th(st, nd, rd) time-tick!
+** ready queue: (877,498)->(879,745)->(872,232)->(878,443)->(873,867)->(875,684)->(874,853)->(870,1009)->(871,979)->(876,1074)->[rear]
+[child] pid: 876, remaining cpu_burst[0]: 1074
+** waiting queue: 
+
+$ 30th(st, nd, rd) time-tick!
+** ready queue: (879,745)->(872,232)->(878,443)->(873,867)->(875,684)->(874,853)->(870,1009)->(871,979)->(876,1074)->(877,398)->[rear]
+** waiting queue: 
+[child] pid: 877, remaining cpu_burst[0]: 398
+
+$ 31th(st, nd, rd) time-tick!
+** ready queue: (872,232)->(878,443)->(873,867)->(875,684)->(874,853)->(870,1009)->(871,979)->(876,1074)->(877,398)->(879,645)->[rear]
+[child] pid: 879, remaining cpu_burst[0]: 645
+** waiting queue: 
+
+$ 32th(st, nd, rd) time-tick!
+** ready queue: (878,443)->(873,867)->(875,684)->(874,853)->(870,1009)->(871,979)->(876,1074)->(877,398)->(879,645)->(872,132)->[rear]
+** waiting queue: 
+[child] pid: 872, remaining cpu_burst[0]: 132
+
+$ 33th(st, nd, rd) time-tick!
+** ready queue: (873,867)->(875,684)->(874,853)->(870,1009)->(871,979)->(876,1074)->(877,398)->(879,645)->(872,132)->(878,343)->[rear]
+** waiting queue: 
+[child] pid: 878, remaining cpu_burst[0]: 343
+
+$ 34th(st, nd, rd) time-tick!
+** ready queue: (875,684)->(874,853)->(870,1009)->(871,979)->(876,1074)->(877,398)->(879,645)->(872,132)->(878,343)->(873,767)->[rear]
+** waiting queue: 
+[child] pid: 873, remaining cpu_burst[0]: 767
+
+$ 35th(st, nd, rd) time-tick!
+** ready queue: (874,853)->(870,1009)->(871,979)->(876,1074)->(877,398)->(879,645)->(872,132)->(878,343)->(873,767)->(875,584)->[rear]
+** waiting queue: 
+[child] pid: 875, remaining cpu_burst[0]: 584
+
+$ 36th(st, nd, rd) time-tick!
+** ready queue: (870,1009)->(871,979)->(876,1074)->(877,398)->(879,645)->(872,132)->(878,343)->(873,767)->(875,584)->(874,753)->[rear]
+** waiting queue: 
+[child] pid: 874, remaining cpu_burst[0]: 753
+
+$ 37th(st, nd, rd) time-tick!
+** ready queue: (871,979)->(876,1074)->(877,398)->(879,645)->(872,132)->(878,343)->(873,767)->(875,584)->(874,753)->(870,909)->[rear]
+** waiting queue: 
+[child] pid: 870, remaining cpu_burst[0]: 909
+
+$ 38th(st, nd, rd) time-tick!
+** ready queue: (876,1074)->(877,398)->(879,645)->(872,132)->(878,343)->(873,767)->(875,584)->(874,753)->(870,909)->(871,879)->[rear]
+** waiting queue: 
+[child] pid: 871, remaining cpu_burst[0]: 879
+
+$ 39th(st, nd, rd) time-tick!
+** ready queue: (877,398)->(879,645)->(872,132)->(878,343)->(873,767)->(875,584)->(874,753)->(870,909)->(871,879)->(876,974)->[rear]
+** waiting queue: 
+[child] pid: 876, remaining cpu_burst[0]: 974
+
+$ 40th(st, nd, rd) time-tick!
+** ready queue: (879,645)->(872,132)->(878,343)->(873,767)->(875,584)->(874,753)->(870,909)->(871,879)->(876,974)->(877,298)->[rear]
+** waiting queue: 
+[child] pid: 877, remaining cpu_burst[0]: 298
+
+$ 41th(st, nd, rd) time-tick!
+** ready queue: (872,132)->(878,343)->(873,767)->(875,584)->(874,753)->(870,909)->(871,879)->(876,974)->(877,298)->(879,545)->[rear]
+** waiting queue: 
+[child] pid: 879, remaining cpu_burst[0]: 545
+
+$ 42th(st, nd, rd) time-tick!
+** ready queue: (878,343)->(873,767)->(875,584)->(874,753)->(870,909)->(871,879)->(876,974)->(877,298)->(879,545)->(872,32)->[rear]
+[child] pid: 872, remaining cpu_burst[0]: 32
+** waiting queue: 
+
+$ 43th(st, nd, rd) time-tick!
+** ready queue: (873,767)->(875,584)->(874,753)->(870,909)->(871,879)->(876,974)->(877,298)->(879,545)->(872,32)->(878,243)->[rear]
+[child] pid: 878, remaining cpu_burst[0]: 243
+** waiting queue: 
+
+$ 44th(st, nd, rd) time-tick!
+** ready queue: (875,584)->(874,753)->(870,909)->(871,879)->(876,974)->(877,298)->(879,545)->(872,32)->(878,243)->(873,667)->[rear]
+** waiting queue: 
+[child] pid: 873, remaining cpu_burst[0]: 667
+
+$ 45th(st, nd, rd) time-tick!
+** ready queue: (874,753)->(870,909)->(871,879)->(876,974)->(877,298)->(879,545)->(872,32)->(878,243)->(873,667)->(875,484)->[rear]
+** waiting queue: 
+[child] pid: 875, remaining cpu_burst[0]: 484
+
+$ 46th(st, nd, rd) time-tick!
+** ready queue: (870,909)->(871,879)->(876,974)->(877,298)->(879,545)->(872,32)->(878,243)->(873,667)->(875,484)->(874,653)->[rear]
+** waiting queue: 
+[child] pid: 874, remaining cpu_burst[0]: 653
+
+$ 47th(st, nd, rd) time-tick!
+** ready queue: (871,879)->(876,974)->(877,298)->(879,545)->(872,32)->(878,243)->(873,667)->(875,484)->(874,653)->(870,809)->[rear]
+** waiting queue: 
+[child] pid: 870, remaining cpu_burst[0]: 809
+
+$ 48th(st, nd, rd) time-tick!
+** ready queue: (876,974)->(877,298)->(879,545)->(872,32)->(878,243)->(873,667)->(875,484)->(874,653)->(870,809)->(871,779)->[rear]
+** waiting queue: 
+[child] pid: 871, remaining cpu_burst[0]: 779
+
+$ 49th(st, nd, rd) time-tick!
+** ready queue: (877,298)->(879,545)->(872,32)->(878,243)->(873,667)->(875,484)->(874,653)->(870,809)->(871,779)->(876,874)->[rear]
+** waiting queue: 
+[child] pid: 876, remaining cpu_burst[0]: 874
+
+$ 50th(st, nd, rd) time-tick!
+** ready queue: (879,545)->(872,32)->(878,243)->(873,667)->(875,484)->(874,653)->(870,809)->(871,779)->(876,874)->(877,198)->[rear]
+** waiting queue: 
+[child] pid: 877, remaining cpu_burst[0]: 198
+
+$ 51th(st, nd, rd) time-tick!
+** ready queue: (872,32)->(878,243)->(873,667)->(875,484)->(874,653)->(870,809)->(871,779)->(876,874)->(877,198)->(879,445)->[rear]
+** waiting queue: 
+[child] pid: 879, remaining cpu_burst[0]: 445
+
+$ 52th(st, nd, rd) time-tick!
+** ready queue: (878,243)->(873,667)->(875,484)->(874,653)->(870,809)->(871,779)->(876,874)->(877,198)->(879,445)->[rear]
+** waiting queue: 
+[child] pid: 872, remaining cpu_burst[0]: 0
+
+$ 53th(st, nd, rd) time-tick!
+** ready queue: (873,667)->(875,484)->(874,653)->(870,809)->(871,779)->(876,874)->(877,198)->(879,445)->(878,143)->[rear]
+** waiting queue: 
+[child] pid: 878, remaining cpu_burst[0]: 143
+
+$ 54th(st, nd, rd) time-tick!
+** ready queue: (875,484)->(874,653)->(870,809)->(871,779)->(876,874)->(877,198)->(879,445)->(878,143)->(873,567)->[rear]
+** waiting queue: (872,276)->[rear]
+[child] pid: 873, remaining cpu_burst[0]: 567
+
+$ 55th(st, nd, rd) time-tick!
+** ready queue: (874,653)->(870,809)->(871,779)->(876,874)->(877,198)->(879,445)->(878,143)->(873,567)->(875,384)->[rear]
+** waiting queue: (872,176)->[rear]
+[child] pid: 875, remaining cpu_burst[0]: 384
+
+$ 56th(st, nd, rd) time-tick!
+** ready queue: (870,809)->(871,779)->(876,874)->(877,198)->(879,445)->(878,143)->(873,567)->(875,384)->(874,553)->[rear]
+** waiting queue: (872,76)->[rear]
+[child] pid: 874, remaining cpu_burst[0]: 553
+
+$ 57th(st, nd, rd) time-tick!
+** ready queue: (871,779)->(876,874)->(877,198)->(879,445)->(878,143)->(873,567)->(875,384)->(874,553)->(870,709)->[rear]
+[child] pid: 870, remaining cpu_burst[0]: 709
+872 io_burst is 0 (DONE)
+** waiting queue: 
+
+$ 58th(st, nd, rd) time-tick!
+** ready queue: (876,874)->(877,198)->(879,445)->(878,143)->(873,567)->(875,384)->(874,553)->(870,709)->(872,562)->(871,679)->[rear]
+** waiting queue: 
+[child] pid: 871, remaining cpu_burst[0]: 679
+
+$ 59th(st, nd, rd) time-tick!
+** ready queue: (877,198)->(879,445)->(878,143)->(873,567)->(875,384)->(874,553)->(870,709)->(872,562)->(871,679)->(876,774)->[rear]
+** waiting queue: 
+[child] pid: 876, remaining cpu_burst[0]: 774
+
+$ 60th(st, nd, rd) time-tick!
+** ready queue: (879,445)->(878,143)->(873,567)->(875,384)->(874,553)->(870,709)->(872,562)->(871,679)->(876,774)->(877,98)->[rear]
+[child] pid: 877, remaining cpu_burst[0]: 98
+** waiting queue: 
+
+$ 61th(st, nd, rd) time-tick!
+** ready queue: (878,143)->(873,567)->(875,384)->(874,553)->(870,709)->(872,562)->(871,679)->(876,774)->(877,98)->(879,345)->[rear]
+[child] pid: 879, remaining cpu_burst[0]: 345
+** waiting queue: 
+
+$ 62th(st, nd, rd) time-tick!
+** ready queue: (873,567)->(875,384)->(874,553)->(870,709)->(872,562)->(871,679)->(876,774)->(877,98)->(879,345)->(878,43)->[rear]
+** waiting queue: 
+[child] pid: 878, remaining cpu_burst[0]: 43
+
+$ 63th(st, nd, rd) time-tick!
+** ready queue: (875,384)->(874,553)->(870,709)->(872,562)->(871,679)->(876,774)->(877,98)->(879,345)->(878,43)->(873,467)->[rear]
+[child] pid: 873, remaining cpu_burst[0]: 467
+** waiting queue: 
+
+$ 64th(st, nd, rd) time-tick!
+** ready queue: (874,553)->(870,709)->(872,562)->(871,679)->(876,774)->(877,98)->(879,345)->(878,43)->(873,467)->(875,284)->[rear]
+** waiting queue: 
+[child] pid: 875, remaining cpu_burst[0]: 284
+
+$ 65th(st, nd, rd) time-tick!
+** ready queue: (870,709)->(872,562)->(871,679)->(876,774)->(877,98)->(879,345)->(878,43)->(873,467)->(875,284)->(874,453)->[rear]
+** waiting queue: 
+[child] pid: 874, remaining cpu_burst[0]: 453
+
+$ 66th(st, nd, rd) time-tick!
+** ready queue: (872,562)->(871,679)->(876,774)->(877,98)->(879,345)->(878,43)->(873,467)->(875,284)->(874,453)->(870,609)->[rear]
+** waiting queue: 
+[child] pid: 870, remaining cpu_burst[0]: 609
+
+$ 67th(st, nd, rd) time-tick!
+** ready queue: (871,679)->(876,774)->(877,98)->(879,345)->(878,43)->(873,467)->(875,284)->(874,453)->(870,609)->(872,462)->[rear]
+** waiting queue: 
+** Remaining CPU-burst[0] time of 872 is 0 now. This process moves to I/O waiting-queue.
+## second cpu burst of 872 started !
+[child] pid: 872, remaining cpu_burst[1]: 462
+
+$ 68th(st, nd, rd) time-tick!
+** ready queue: (876,774)->(877,98)->(879,345)->(878,43)->(873,467)->(875,284)->(874,453)->(870,609)->(872,462)->(871,579)->[rear]
+** waiting queue: 
+[child] pid: 871, remaining cpu_burst[0]: 579
+
+$ 69th(st, nd, rd) time-tick!
+** ready queue: (877,98)->(879,345)->(878,43)->(873,467)->(875,284)->(874,453)->(870,609)->(872,462)->(871,579)->(876,674)->[rear]
+** waiting queue: 
+[child] pid: 876, remaining cpu_burst[0]: 674
+
+$ 70th(st, nd, rd) time-tick!
+** ready queue: (879,345)->(878,43)->(873,467)->(875,284)->(874,453)->(870,609)->(872,462)->(871,579)->(876,674)->[rear]
+** waiting queue: 
+[child] pid: 877, remaining cpu_burst[0]: 0
+
+$ 71th(st, nd, rd) time-tick!
+** ready queue: (878,43)->(873,467)->(875,284)->(874,453)->(870,609)->(872,462)->(871,579)->(876,674)->(879,245)->[rear]
+** waiting queue: 
+[child] pid: 879, remaining cpu_burst[0]: 245
+
+$ 72th(st, nd, rd) time-tick!
+** ready queue: (873,467)->(875,284)->(874,453)->(870,609)->(872,462)->(871,579)->(876,674)->(879,245)->[rear]
+** waiting queue: (877,108)->[rear]
+[child] pid: 878, remaining cpu_burst[0]: 0
+
+$ 73th(st, nd, rd) time-tick!
+** ready queue: (875,284)->(874,453)->(870,609)->(872,462)->(871,579)->(876,674)->(879,245)->(873,367)->[rear]
+** waiting queue: (877,8)->[rear]
+[child] pid: 873, remaining cpu_burst[0]: 367
+
+$ 74th(st, nd, rd) time-tick!
+** ready queue: (874,453)->(870,609)->(872,462)->(871,579)->(876,674)->(879,245)->(873,367)->(875,184)->[rear]
+[child] pid: 875, remaining cpu_burst[0]: 184
+877 io_burst is 0 (DONE)
+** waiting queue: (878,55)->[rear]
+
+$ 75th(st, nd, rd) time-tick!
+** ready queue: (870,609)->(872,462)->(871,579)->(876,674)->(879,245)->(873,367)->(875,184)->(877,777)->(874,353)->[rear]
+878 io_burst is 0 (DONE)
+** waiting queue: 
+[child] pid: 874, remaining cpu_burst[0]: 353
+
+$ 76th(st, nd, rd) time-tick!
+** ready queue: (872,462)->(871,579)->(876,674)->(879,245)->(873,367)->(875,184)->(877,777)->(874,353)->(878,741)->(870,509)->[rear]
+** waiting queue: 
+[child] pid: 870, remaining cpu_burst[0]: 509
+
+$ 77th(st, nd, rd) time-tick!
+** ready queue: (871,579)->(876,674)->(879,245)->(873,367)->(875,184)->(877,777)->(874,353)->(878,741)->(870,509)->(872,362)->[rear]
+** waiting queue: 
+[child] pid: 872, remaining cpu_burst[1]: 362
+
+$ 78th(st, nd, rd) time-tick!
+** ready queue: (876,674)->(879,245)->(873,367)->(875,184)->(877,777)->(874,353)->(878,741)->(870,509)->(872,362)->(871,479)->[rear]
+** waiting queue: 
+[child] pid: 871, remaining cpu_burst[0]: 479
+
+$ 79th(st, nd, rd) time-tick!
+** ready queue: (879,245)->(873,367)->(875,184)->(877,777)->(874,353)->(878,741)->(870,509)->(872,362)->(871,479)->(876,574)->[rear]
+** waiting queue: 
+[child] pid: 876, remaining cpu_burst[0]: 574
+
+$ 80th(st, nd, rd) time-tick!
+** ready queue: (873,367)->(875,184)->(877,777)->(874,353)->(878,741)->(870,509)->(872,362)->(871,479)->(876,574)->(879,145)->[rear]
+** waiting queue: 
+[child] pid: 879, remaining cpu_burst[0]: 145
+
+$ 81th(st, nd, rd) time-tick!
+** ready queue: (875,184)->(877,777)->(874,353)->(878,741)->(870,509)->(872,362)->(871,479)->(876,574)->(879,145)->(873,267)->[rear]
+** waiting queue: 
+[child] pid: 873, remaining cpu_burst[0]: 267
+
+$ 82th(st, nd, rd) time-tick!
+** ready queue: (877,777)->(874,353)->(878,741)->(870,509)->(872,362)->(871,479)->(876,574)->(879,145)->(873,267)->(875,84)->[rear]
+** waiting queue: 
+[child] pid: 875, remaining cpu_burst[0]: 84
+
+$ 83th(st, nd, rd) time-tick!
+** ready queue: (874,353)->(878,741)->(870,509)->(872,362)->(871,479)->(876,574)->(879,145)->(873,267)->(875,84)->(877,677)->[rear]
+** waiting queue: 
+** Remaining CPU-burst[0] time of 877 is 0 now. This process moves to I/O waiting-queue.
+## second cpu burst of 877 started !
+[child] pid: 877, remaining cpu_burst[1]: 677
+
+$ 84th(st, nd, rd) time-tick!
+** ready queue: (878,741)->(870,509)->(872,362)->(871,479)->(876,574)->(879,145)->(873,267)->(875,84)->(877,677)->(874,253)->[rear]
+** waiting queue: 
+[child] pid: 874, remaining cpu_burst[0]: 253
+
+$ 85th(st, nd, rd) time-tick!
+** ready queue: (870,509)->(872,362)->(871,479)->(876,574)->(879,145)->(873,267)->(875,84)->(877,677)->(874,253)->(878,641)->[rear]
+** waiting queue: 
+** Remaining CPU-burst[0] time of 878 is 0 now. This process moves to I/O waiting-queue.
+## second cpu burst of 878 started !
+[child] pid: 878, remaining cpu_burst[1]: 641
+
+$ 86th(st, nd, rd) time-tick!
+** ready queue: (872,362)->(871,479)->(876,574)->(879,145)->(873,267)->(875,84)->(877,677)->(874,253)->(878,641)->(870,409)->[rear]
+** waiting queue: 
+[child] pid: 870, remaining cpu_burst[0]: 409
+
+$ 87th(st, nd, rd) time-tick!
+** ready queue: (871,479)->(876,574)->(879,145)->(873,267)->(875,84)->(877,677)->(874,253)->(878,641)->(870,409)->(872,262)->[rear]
+** waiting queue: 
+[child] pid: 872, remaining cpu_burst[1]: 262
+
+$ 88th(st, nd, rd) time-tick!
+** ready queue: (876,574)->(879,145)->(873,267)->(875,84)->(877,677)->(874,253)->(878,641)->(870,409)->(872,262)->(871,379)->[rear]
+** waiting queue: 
+[child] pid: 871, remaining cpu_burst[0]: 379
+
+$ 89th(st, nd, rd) time-tick!
+** ready queue: (879,145)->(873,267)->(875,84)->(877,677)->(874,253)->(878,641)->(870,409)->(872,262)->(871,379)->(876,474)->[rear]
+** waiting queue: 
+[child] pid: 876, remaining cpu_burst[0]: 474
+
+$ 90th(st, nd, rd) time-tick!
+** ready queue: (873,267)->(875,84)->(877,677)->(874,253)->(878,641)->(870,409)->(872,262)->(871,379)->(876,474)->(879,45)->[rear]
+** waiting queue: 
+[child] pid: 879, remaining cpu_burst[0]: 45
+
+$ 91th(st, nd, rd) time-tick!
+** ready queue: (875,84)->(877,677)->(874,253)->(878,641)->(870,409)->(872,262)->(871,379)->(876,474)->(879,45)->(873,167)->[rear]
+** waiting queue: 
+[child] pid: 873, remaining cpu_burst[0]: 167
+
+$ 92th(st, nd, rd) time-tick!
+** ready queue: (877,677)->(874,253)->(878,641)->(870,409)->(872,262)->(871,379)->(876,474)->(879,45)->(873,167)->[rear]
+[child] pid: 875, remaining cpu_burst[0]: 0
+** waiting queue: 
+
+$ 93th(st, nd, rd) time-tick!
+** ready queue: (874,253)->(878,641)->(870,409)->(872,262)->(871,379)->(876,474)->(879,45)->(873,167)->(877,577)->[rear]
+** waiting queue: (875,144)->[rear]
+[child] pid: 877, remaining cpu_burst[1]: 577
+
+$ 94th(st, nd, rd) time-tick!
+** ready queue: (878,641)->(870,409)->(872,262)->(871,379)->(876,474)->(879,45)->(873,167)->(877,577)->(874,153)->[rear]
+[child] pid: 874, remaining cpu_burst[0]: 153
+** waiting queue: (875,44)->[rear]
+
+$ 95th(st, nd, rd) time-tick!
+** ready queue: (870,409)->(872,262)->(871,379)->(876,474)->(879,45)->(873,167)->(877,577)->(874,153)->(878,541)->[rear]
+875 io_burst is 0 (DONE)
+** waiting queue: 
+[child] pid: 878, remaining cpu_burst[1]: 541
+
+$ 96th(st, nd, rd) time-tick!
+** ready queue: (872,262)->(871,379)->(876,474)->(879,45)->(873,167)->(877,577)->(874,153)->(878,541)->(875,1136)->(870,309)->[rear]
+** waiting queue: 
+[child] pid: 870, remaining cpu_burst[0]: 309
+
+$ 97th(st, nd, rd) time-tick!
+** ready queue: (871,379)->(876,474)->(879,45)->(873,167)->(877,577)->(874,153)->(878,541)->(875,1136)->(870,309)->(872,162)->[rear]
+** waiting queue: 
+[child] pid: 872, remaining cpu_burst[1]: 162
+
+$ 98th(st, nd, rd) time-tick!
+** ready queue: (876,474)->(879,45)->(873,167)->(877,577)->(874,153)->(878,541)->(875,1136)->(870,309)->(872,162)->(871,279)->[rear]
+[child] pid: 871, remaining cpu_burst[0]: 279
+** waiting queue: 
+
+$ 99th(st, nd, rd) time-tick!
+** ready queue: (879,45)->(873,167)->(877,577)->(874,153)->(878,541)->(875,1136)->(870,309)->(872,162)->(871,279)->(876,374)->[rear]
+** waiting queue: 
+[child] pid: 876, remaining cpu_burst[0]: 374
+
+$ 100th(st, nd, rd) time-tick!
+** ready queue: (873,167)->(877,577)->(874,153)->(878,541)->(875,1136)->(870,309)->(872,162)->(871,279)->(876,374)->[rear]
+** waiting queue: 
+[child] pid: 879, remaining cpu_burst[0]: 0
+
+$ 101th(st, nd, rd) time-tick!
+** ready queue: (877,577)->(874,153)->(878,541)->(875,1136)->(870,309)->(872,162)->(871,279)->(876,374)->(873,67)->[rear]
+** waiting queue: 
+[child] pid: 873, remaining cpu_burst[0]: 67
+
+$ 102th(st, nd, rd) time-tick!
+** ready queue: (874,153)->(878,541)->(875,1136)->(870,309)->(872,162)->(871,279)->(876,374)->(873,67)->(877,477)->[rear]
+** waiting queue: (879,91)->[rear]
+[child] pid: 877, remaining cpu_burst[1]: 477
+
+$ 103th(st, nd, rd) time-tick!
+** ready queue: (878,541)->(875,1136)->(870,309)->(872,162)->(871,279)->(876,374)->(873,67)->(877,477)->(874,53)->[rear]
+879 io_burst is 0 (DONE)
+** waiting queue: 
+[child] pid: 874, remaining cpu_burst[0]: 53
+
+$ 104th(st, nd, rd) time-tick!
+** ready queue: (875,1136)->(870,309)->(872,162)->(871,279)->(876,374)->(873,67)->(877,477)->(874,53)->(879,666)->(878,441)->[rear]
+[child] pid: 878, remaining cpu_burst[1]: 441
+** waiting queue: 
+
+$ 105th(st, nd, rd) time-tick!
+** ready queue: (870,309)->(872,162)->(871,279)->(876,374)->(873,67)->(877,477)->(874,53)->(879,666)->(878,441)->(875,1036)->[rear]
+** waiting queue: 
+** Remaining CPU-burst[0] time of 875 is 0 now. This process moves to I/O waiting-queue.
+## second cpu burst of 875 started !
+[child] pid: 875, remaining cpu_burst[1]: 1036
+
+$ 106th(st, nd, rd) time-tick!
+** ready queue: (872,162)->(871,279)->(876,374)->(873,67)->(877,477)->(874,53)->(879,666)->(878,441)->(875,1036)->(870,209)->[rear]
+** waiting queue: 
+[child] pid: 870, remaining cpu_burst[0]: 209
+
+$ 107th(st, nd, rd) time-tick!
+** ready queue: (871,279)->(876,374)->(873,67)->(877,477)->(874,53)->(879,666)->(878,441)->(875,1036)->(870,209)->(872,62)->[rear]
+[child] pid: 872, remaining cpu_burst[1]: 62
+** waiting queue: 
+
+$ 108th(st, nd, rd) time-tick!
+** ready queue: (876,374)->(873,67)->(877,477)->(874,53)->(879,666)->(878,441)->(875,1036)->(870,209)->(872,62)->(871,179)->[rear]
+** waiting queue: 
+[child] pid: 871, remaining cpu_burst[0]: 179
+
+$ 109th(st, nd, rd) time-tick!
+** ready queue: (873,67)->(877,477)->(874,53)->(879,666)->(878,441)->(875,1036)->(870,209)->(872,62)->(871,179)->(876,274)->[rear]
+[child] pid: 876, remaining cpu_burst[0]: 274
+** waiting queue: 
+
+$ 110th(st, nd, rd) time-tick!
+** ready queue: (877,477)->(874,53)->(879,666)->(878,441)->(875,1036)->(870,209)->(872,62)->(871,179)->(876,274)->[rear]
+** waiting queue: 
+[child] pid: 873, remaining cpu_burst[0]: 0
+
+$ 111th(st, nd, rd) time-tick!
+** ready queue: (874,53)->(879,666)->(878,441)->(875,1036)->(870,209)->(872,62)->(871,179)->(876,274)->(877,377)->[rear]
+** waiting queue: 
+[child] pid: 877, remaining cpu_burst[1]: 377
+
+$ 112th(st, nd, rd) time-tick!
+** ready queue: (879,666)->(878,441)->(875,1036)->(870,209)->(872,62)->(871,179)->(876,274)->(877,377)->[rear]
+[child] pid: 874, remaining cpu_burst[0]: 0
+** waiting queue: (873,356)->[rear]
+
+$ 113th(st, nd, rd) time-tick!
+** ready queue: (878,441)->(875,1036)->(870,209)->(872,62)->(871,179)->(876,274)->(877,377)->(879,566)->[rear]
+** waiting queue: (873,256)->(874,280)->[rear]
+** Remaining CPU-burst[0] time of 879 is 0 now. This process moves to I/O waiting-queue.
+## second cpu burst of 879 started !
+[child] pid: 879, remaining cpu_burst[1]: 566
+
+$ 114th(st, nd, rd) time-tick!
+** ready queue: (875,1036)->(870,209)->(872,62)->(871,179)->(876,274)->(877,377)->(879,566)->(878,341)->[rear]
+** waiting queue: (873,156)->(874,180)->[rear]
+[child] pid: 878, remaining cpu_burst[1]: 341
+
+$ 115th(st, nd, rd) time-tick!
+** ready queue: (870,209)->(872,62)->(871,179)->(876,274)->(877,377)->(879,566)->(878,341)->(875,936)->[rear]
+** waiting queue: (873,56)->(874,80)->[rear]
+[child] pid: 875, remaining cpu_burst[1]: 936
+
+$ 116th(st, nd, rd) time-tick!
+** ready queue: (872,62)->(871,179)->(876,274)->(877,377)->(879,566)->(878,341)->(875,936)->(870,109)->[rear]
+[child] pid: 870, remaining cpu_burst[0]: 109
+873 io_burst is 0 (DONE)
+874 io_burst is 0 (DONE)
+** waiting queue: 
+
+$ 117th(st, nd, rd) time-tick!
+[parent] child of 872 is DONE, waiting time: 9914
+** ready queue: (871,179)->(876,274)->(877,377)->(879,566)->(878,341)->(875,936)->(870,109)->(873,552)->(874,1491)->[rear]
+** waiting queue: 
+[child] pid: 872, remaining cpu_burst[1]: 0
+872 child process is done!
+
+$ 118th(st, nd, rd) time-tick!
+** ready queue: (876,274)->(877,377)->(879,566)->(878,341)->(875,936)->(870,109)->(873,552)->(874,1491)->(871,79)->[rear]
+** waiting queue: 
+[child] pid: 871, remaining cpu_burst[0]: 79
+
+$ 119th(st, nd, rd) time-tick!
+** ready queue: (877,377)->(879,566)->(878,341)->(875,936)->(870,109)->(873,552)->(874,1491)->(871,79)->(876,174)->[rear]
+** waiting queue: 
+[child] pid: 876, remaining cpu_burst[0]: 174
+
+$ 120th(st, nd, rd) time-tick!
+** ready queue: (879,566)->(878,341)->(875,936)->(870,109)->(873,552)->(874,1491)->(871,79)->(876,174)->(877,277)->[rear]
+** waiting queue: 
+[child] pid: 877, remaining cpu_burst[1]: 277
+
+$ 121th(st, nd, rd) time-tick!
+** ready queue: (878,341)->(875,936)->(870,109)->(873,552)->(874,1491)->(871,79)->(876,174)->(877,277)->(879,466)->[rear]
+** waiting queue: 
+[child] pid: 879, remaining cpu_burst[1]: 466
+
+$ 122th(st, nd, rd) time-tick!
+** ready queue: (875,936)->(870,109)->(873,552)->(874,1491)->(871,79)->(876,174)->(877,277)->(879,466)->(878,241)->[rear]
+** waiting queue: 
+[child] pid: 878, remaining cpu_burst[1]: 241
+
+$ 123th(st, nd, rd) time-tick!
+** ready queue: (870,109)->(873,552)->(874,1491)->(871,79)->(876,174)->(877,277)->(879,466)->(878,241)->(875,836)->[rear]
+** waiting queue: 
+[child] pid: 875, remaining cpu_burst[1]: 836
+
+$ 124th(st, nd, rd) time-tick!
+** ready queue: (873,552)->(874,1491)->(871,79)->(876,174)->(877,277)->(879,466)->(878,241)->(875,836)->(870,9)->[rear]
+** waiting queue: 
+[child] pid: 870, remaining cpu_burst[0]: 9
+
+$ 125th(st, nd, rd) time-tick!
+** ready queue: (874,1491)->(871,79)->(876,174)->(877,277)->(879,466)->(878,241)->(875,836)->(870,9)->(873,452)->[rear]
+** waiting queue: 
+** Remaining CPU-burst[0] time of 873 is 0 now. This process moves to I/O waiting-queue.
+## second cpu burst of 873 started !
+[child] pid: 873, remaining cpu_burst[1]: 452
+
+$ 126th(st, nd, rd) time-tick!
+** ready queue: (871,79)->(876,174)->(877,277)->(879,466)->(878,241)->(875,836)->(870,9)->(873,452)->(874,1391)->[rear]
+** waiting queue: 
+** Remaining CPU-burst[0] time of 874 is 0 now. This process moves to I/O waiting-queue.
+## second cpu burst of 874 started !
+[child] pid: 874, remaining cpu_burst[1]: 1391
+
+$ 127th(st, nd, rd) time-tick!
+** ready queue: (876,174)->(877,277)->(879,466)->(878,241)->(875,836)->(870,9)->(873,452)->(874,1391)->[rear]
+** waiting queue: 
+[child] pid: 871, remaining cpu_burst[0]: 0
+[child] pid: 876, remaining cpu_burst[0]: 74
+
+$ 128th(st, nd, rd) time-tick!
+** ready queue: (877,277)->(879,466)->(878,241)->(875,836)->(870,9)->(873,452)->(874,1391)->(876,74)->[rear]
+** waiting queue: 
+
+$ 129th(st, nd, rd) time-tick!
+** ready queue: (879,466)->(878,241)->(875,836)->(870,9)->(873,452)->(874,1391)->(876,74)->(877,177)->[rear]
+** waiting queue: (871,304)->[rear]
+[child] pid: 877, remaining cpu_burst[1]: 177
+
+$ 130th(st, nd, rd) time-tick!
+** ready queue: (878,241)->(875,836)->(870,9)->(873,452)->(874,1391)->(876,74)->(877,177)->(879,366)->[rear]
+[child] pid: 879, remaining cpu_burst[1]: 366
+** waiting queue: (871,204)->[rear]
+
+$ 131th(st, nd, rd) time-tick!
+** ready queue: (875,836)->(870,9)->(873,452)->(874,1391)->(876,74)->(877,177)->(879,366)->(878,141)->[rear]
+** waiting queue: (871,104)->[rear]
+[child] pid: 878, remaining cpu_burst[1]: 141
+
+$ 132th(st, nd, rd) time-tick!
+** ready queue: (870,9)->(873,452)->(874,1391)->(876,74)->(877,177)->(879,366)->(878,141)->(875,736)->[rear]
+[child] pid: 875, remaining cpu_burst[1]: 736
+** waiting queue: (871,4)->[rear]
+
+$ 133th(st, nd, rd) time-tick!
+** ready queue: (873,452)->(874,1391)->(876,74)->(877,177)->(879,366)->(878,141)->(875,736)->[rear]
+871 io_burst is 0 (DONE)
+** waiting queue: 
+[child] pid: 870, remaining cpu_burst[0]: 0
+
+$ 134th(st, nd, rd) time-tick!
+** ready queue: (874,1391)->(876,74)->(877,177)->(879,366)->(878,141)->(875,736)->(871,773)->(873,352)->[rear]
+** waiting queue: 
+[child] pid: 873, remaining cpu_burst[1]: 352
+
+$ 135th(st, nd, rd) time-tick!
+** ready queue: (876,74)->(877,177)->(879,366)->(878,141)->(875,736)->(871,773)->(873,352)->(874,1291)->[rear]
+** waiting queue: (870,179)->[rear]
+[child] pid: 874, remaining cpu_burst[1]: 1291
+
+$ 136th(st, nd, rd) time-tick!
+** ready queue: (877,177)->(879,366)->(878,141)->(875,736)->(871,773)->(873,352)->(874,1291)->[rear]
+** waiting queue: (870,79)->[rear]
+[child] pid: 876, remaining cpu_burst[0]: 0
+
+$ 137th(st, nd, rd) time-tick!
+** ready queue: (879,366)->(878,141)->(875,736)->(871,773)->(873,352)->(874,1291)->(877,77)->[rear]
+870 io_burst is 0 (DONE)
+** waiting queue: 
+[child] pid: 877, remaining cpu_burst[1]: 77
+
+$ 138th(st, nd, rd) time-tick!
+** ready queue: (878,141)->(875,736)->(871,773)->(873,352)->(874,1291)->(877,77)->(870,960)->(879,266)->[rear]
+** waiting queue: (876,53)->[rear]
+[child] pid: 879, remaining cpu_burst[1]: 266
+
+$ 139th(st, nd, rd) time-tick!
+** ready queue: (875,736)->(871,773)->(873,352)->(874,1291)->(877,77)->(870,960)->(879,266)->(878,41)->[rear]
+876 io_burst is 0 (DONE)
+** waiting queue: 
+[child] pid: 878, remaining cpu_burst[1]: 41
+
+$ 140th(st, nd, rd) time-tick!
+** ready queue: (871,773)->(873,352)->(874,1291)->(877,77)->(870,960)->(879,266)->(878,41)->(876,783)->(875,636)->[rear]
+** waiting queue: 
+[child] pid: 875, remaining cpu_burst[1]: 636
+
+$ 141th(st, nd, rd) time-tick!
+** ready queue: (873,352)->(874,1291)->(877,77)->(870,960)->(879,266)->(878,41)->(876,783)->(875,636)->(871,673)->[rear]
+** waiting queue: 
+** Remaining CPU-burst[0] time of 871 is 0 now. This process moves to I/O waiting-queue.
+## second cpu burst of 871 started !
+[child] pid: 871, remaining cpu_burst[1]: 673
+
+$ 142th(st, nd, rd) time-tick!
+** ready queue: (874,1291)->(877,77)->(870,960)->(879,266)->(878,41)->(876,783)->(875,636)->(871,673)->(873,252)->[rear]
+** waiting queue: 
+[child] pid: 873, remaining cpu_burst[1]: 252
+
+$ 143th(st, nd, rd) time-tick!
+** ready queue: (877,77)->(870,960)->(879,266)->(878,41)->(876,783)->(875,636)->(871,673)->(873,252)->(874,1191)->[rear]
+** waiting queue: 
+[child] pid: 874, remaining cpu_burst[1]: 1191
+
+$ 144th(st, nd, rd) time-tick!
+[parent] child of 877 is DONE, waiting time: 12240
+** ready queue: (870,960)->(879,266)->(878,41)->(876,783)->(875,636)->(871,673)->(873,252)->(874,1191)->[rear]
+** waiting queue: 
+[child] pid: 877, remaining cpu_burst[1]: 0
+877 child process is done!
+
+$ 145th(st, nd, rd) time-tick!
+** ready queue: (879,266)->(878,41)->(876,783)->(875,636)->(871,673)->(873,252)->(874,1191)->(870,860)->[rear]
+** waiting queue: 
+** Remaining CPU-burst[0] time of 870 is 0 now. This process moves to I/O waiting-queue.
+## second cpu burst of 870 started !
+[child] pid: 870, remaining cpu_burst[1]: 860
+
+$ 146th(st, nd, rd) time-tick!
+** ready queue: (878,41)->(876,783)->(875,636)->(871,673)->(873,252)->(874,1191)->(870,860)->(879,166)->[rear]
+** waiting queue: 
+[child] pid: 879, remaining cpu_burst[1]: 166
+
+$ 147th(st, nd, rd) time-tick!
+[parent] child of 878 is DONE, waiting time: 12525
+[child] pid: 878, remaining cpu_burst[1]: 0
+** ready queue: (876,783)->(875,636)->(871,673)->(873,252)->(874,1191)->(870,860)->(879,166)->[rear]
+878 child process is done!
+** waiting queue: 
+
+$ 148th(st, nd, rd) time-tick!
+** ready queue: (875,636)->(871,673)->(873,252)->(874,1191)->(870,860)->(879,166)->(876,683)->[rear]
+** waiting queue: 
+** Remaining CPU-burst[0] time of 876 is 0 now. This process moves to I/O waiting-queue.
+## second cpu burst of 876 started !
+[child] pid: 876, remaining cpu_burst[1]: 683
+
+$ 149th(st, nd, rd) time-tick!
+** ready queue: (871,673)->(873,252)->(874,1191)->(870,860)->(879,166)->(876,683)->(875,536)->[rear]
+** waiting queue: 
+[child] pid: 875, remaining cpu_burst[1]: 536
+
+$ 150th(st, nd, rd) time-tick!
+** ready queue: (873,252)->(874,1191)->(870,860)->(879,166)->(876,683)->(875,536)->(871,573)->[rear]
+** waiting queue: 
+[child] pid: 871, remaining cpu_burst[1]: 573
+
+$ 151th(st, nd, rd) time-tick!
+** ready queue: (874,1191)->(870,860)->(879,166)->(876,683)->(875,536)->(871,573)->(873,152)->[rear]
+[child] pid: 873, remaining cpu_burst[1]: 152
+** waiting queue: 
+
+$ 152th(st, nd, rd) time-tick!
+** ready queue: (870,860)->(879,166)->(876,683)->(875,536)->(871,573)->(873,152)->(874,1091)->[rear]
+** waiting queue: 
+[child] pid: 874, remaining cpu_burst[1]: 1091
+
+$ 153th(st, nd, rd) time-tick!
+** ready queue: (879,166)->(876,683)->(875,536)->(871,573)->(873,152)->(874,1091)->(870,760)->[rear]
+** waiting queue: 
+[child] pid: 870, remaining cpu_burst[1]: 760
+
+$ 154th(st, nd, rd) time-tick!
+** ready queue: (876,683)->(875,536)->(871,573)->(873,152)->(874,1091)->(870,760)->(879,66)->[rear]
+** waiting queue: 
+[child] pid: 879, remaining cpu_burst[1]: 66
+
+$ 155th(st, nd, rd) time-tick!
+** ready queue: (875,536)->(871,573)->(873,152)->(874,1091)->(870,760)->(879,66)->(876,583)->[rear]
+[child] pid: 876, remaining cpu_burst[1]: 583
+** waiting queue: 
+
+$ 156th(st, nd, rd) time-tick!
+** ready queue: (871,573)->(873,152)->(874,1091)->(870,760)->(879,66)->(876,583)->(875,436)->[rear]
+** waiting queue: 
+[child] pid: 875, remaining cpu_burst[1]: 436
+
+$ 157th(st, nd, rd) time-tick!
+** ready queue: (873,152)->(874,1091)->(870,760)->(879,66)->(876,583)->(875,436)->(871,473)->[rear]
+** waiting queue: 
+[child] pid: 871, remaining cpu_burst[1]: 473
+
+$ 158th(st, nd, rd) time-tick!
+** ready queue: (874,1091)->(870,760)->(879,66)->(876,583)->(875,436)->(871,473)->(873,52)->[rear]
+** waiting queue: 
+[child] pid: 873, remaining cpu_burst[1]: 52
+
+$ 159th(st, nd, rd) time-tick!
+** ready queue: (870,760)->(879,66)->(876,583)->(875,436)->(871,473)->(873,52)->(874,991)->[rear]
+** waiting queue: 
+[child] pid: 874, remaining cpu_burst[1]: 991
+
+$ 160th(st, nd, rd) time-tick!
+** ready queue: (879,66)->(876,583)->(875,436)->(871,473)->(873,52)->(874,991)->(870,660)->[rear]
+** waiting queue: 
+[child] pid: 870, remaining cpu_burst[1]: 660
+
+$ 161th(st, nd, rd) time-tick!
+[parent] child of 879 is DONE, waiting time: 13628
+** ready queue: (876,583)->(875,436)->(871,473)->(873,52)->(874,991)->(870,660)->[rear]
+** waiting queue: 
+[child] pid: 879, remaining cpu_burst[1]: 0
+879 child process is done!
+
+$ 162th(st, nd, rd) time-tick!
+** ready queue: (875,436)->(871,473)->(873,52)->(874,991)->(870,660)->(876,483)->[rear]
+[child] pid: 876, remaining cpu_burst[1]: 483
+** waiting queue: 
+
+$ 163th(st, nd, rd) time-tick!
+** ready queue: (871,473)->(873,52)->(874,991)->(870,660)->(876,483)->(875,336)->[rear]
+** waiting queue: 
+[child] pid: 875, remaining cpu_burst[1]: 336
+
+$ 164th(st, nd, rd) time-tick!
+** ready queue: (873,52)->(874,991)->(870,660)->(876,483)->(875,336)->(871,373)->[rear]
+** waiting queue: 
+[child] pid: 871, remaining cpu_burst[1]: 373
+
+$ 165th(st, nd, rd) time-tick!
+[parent] child of 873 is DONE, waiting time: 13707
+** ready queue: (874,991)->(870,660)->(876,483)->(875,336)->(871,373)->[rear]
+** waiting queue: 
+[child] pid: 873, remaining cpu_burst[1]: 0
+873 child process is done!
+
+$ 166th(st, nd, rd) time-tick!
+** ready queue: (870,660)->(876,483)->(875,336)->(871,373)->(874,891)->[rear]
+** waiting queue: 
+[child] pid: 874, remaining cpu_burst[1]: 891
+
+$ 167th(st, nd, rd) time-tick!
+** ready queue: (876,483)->(875,336)->(871,373)->(874,891)->(870,560)->[rear]
+** waiting queue: 
+[child] pid: 870, remaining cpu_burst[1]: 560
+
+$ 168th(st, nd, rd) time-tick!
+** ready queue: (875,336)->(871,373)->(874,891)->(870,560)->(876,383)->[rear]
+** waiting queue: 
+[child] pid: 876, remaining cpu_burst[1]: 383
+
+$ 169th(st, nd, rd) time-tick!
+** ready queue: (871,373)->(874,891)->(870,560)->(876,383)->(875,236)->[rear]
+** waiting queue: 
+[child] pid: 875, remaining cpu_burst[1]: 236
+
+$ 170th(st, nd, rd) time-tick!
+** ready queue: (874,891)->(870,560)->(876,383)->(875,236)->(871,273)->[rear]
+[child] pid: 871, remaining cpu_burst[1]: 273
+** waiting queue: 
+
+$ 171th(st, nd, rd) time-tick!
+** ready queue: (870,560)->(876,383)->(875,236)->(871,273)->(874,791)->[rear]
+** waiting queue: 
+[child] pid: 874, remaining cpu_burst[1]: 791
+
+$ 172th(st, nd, rd) time-tick!
+** ready queue: (876,383)->(875,236)->(871,273)->(874,791)->(870,460)->[rear]
+** waiting queue: 
+[child] pid: 870, remaining cpu_burst[1]: 460
+
+$ 173th(st, nd, rd) time-tick!
+** ready queue: (875,236)->(871,273)->(874,791)->(870,460)->(876,283)->[rear]
+** waiting queue: 
+[child] pid: 876, remaining cpu_burst[1]: 283
+
+$ 174th(st, nd, rd) time-tick!
+** ready queue: (871,273)->(874,791)->(870,460)->(876,283)->(875,136)->[rear]
+[child] pid: 875, remaining cpu_burst[1]: 136
+** waiting queue: 
+
+$ 175th(st, nd, rd) time-tick!
+** ready queue: (874,791)->(870,460)->(876,283)->(875,136)->(871,173)->[rear]
+** waiting queue: 
+[child] pid: 871, remaining cpu_burst[1]: 173
+
+$ 176th(st, nd, rd) time-tick!
+** ready queue: (870,460)->(876,283)->(875,136)->(871,173)->(874,691)->[rear]
+** waiting queue: 
+[child] pid: 874, remaining cpu_burst[1]: 691
+
+$ 177th(st, nd, rd) time-tick!
+** ready queue: (876,283)->(875,136)->(871,173)->(874,691)->(870,360)->[rear]
+[child] pid: 870, remaining cpu_burst[1]: 360
+** waiting queue: 
+
+$ 178th(st, nd, rd) time-tick!
+** ready queue: (875,136)->(871,173)->(874,691)->(870,360)->(876,183)->[rear]
+** waiting queue: 
+[child] pid: 876, remaining cpu_burst[1]: 183
+
+$ 179th(st, nd, rd) time-tick!
+** ready queue: (871,173)->(874,691)->(870,360)->(876,183)->(875,36)->[rear]
+** waiting queue: 
+[child] pid: 875, remaining cpu_burst[1]: 36
+
+$ 180th(st, nd, rd) time-tick!
+** ready queue: (874,691)->(870,360)->(876,183)->(875,36)->(871,73)->[rear]
+** waiting queue: 
+[child] pid: 871, remaining cpu_burst[1]: 73
+
+$ 181th(st, nd, rd) time-tick!
+** ready queue: (870,360)->(876,183)->(875,36)->(871,73)->(874,591)->[rear]
+** waiting queue: 
+[child] pid: 874, remaining cpu_burst[1]: 591
+
+$ 182th(st, nd, rd) time-tick!
+** ready queue: (876,183)->(875,36)->(871,73)->(874,591)->(870,260)->[rear]
+** waiting queue: 
+[child] pid: 870, remaining cpu_burst[1]: 260
+
+$ 183th(st, nd, rd) time-tick!
+** ready queue: (875,36)->(871,73)->(874,591)->(870,260)->(876,83)->[rear]
+** waiting queue: 
+[child] pid: 876, remaining cpu_burst[1]: 83
+
+$ 184th(st, nd, rd) time-tick!
+[parent] child of 875 is DONE, waiting time: 15354
+** ready queue: (871,73)->(874,591)->(870,260)->(876,83)->[rear]
+[child] pid: 875, remaining cpu_burst[1]: 0
+875 child process is done!
+** waiting queue: 
+
+$ 185th(st, nd, rd) time-tick!
+[parent] child of 871 is DONE, waiting time: 15335
+[child] pid: 871, remaining cpu_burst[1]: 0
+871 child process is done!
+** ready queue: (874,591)->(870,260)->(876,83)->[rear]
+** waiting queue: 
+
+$ 186th(st, nd, rd) time-tick!
+** ready queue: (870,260)->(876,83)->(874,491)->[rear]
+[child] pid: 874, remaining cpu_burst[1]: 491
+** waiting queue: 
+
+$ 187th(st, nd, rd) time-tick!
+** ready queue: (876,83)->(874,491)->(870,160)->[rear]
+** waiting queue: 
+[child] pid: 870, remaining cpu_burst[1]: 160
+
+$ 188th(st, nd, rd) time-tick!
+[parent] child of 876 is DONE, waiting time: 15764
+** ready queue: (874,491)->(870,160)->[rear]
+** waiting queue: 
+[child] pid: 876, remaining cpu_burst[1]: 0
+876 child process is done!
+
+$ 189th(st, nd, rd) time-tick!
+** ready queue: (870,160)->(874,391)->[rear]
+** waiting queue: 
+[child] pid: 874, remaining cpu_burst[1]: 391
+
+$ 190th(st, nd, rd) time-tick!
+** ready queue: (874,391)->(870,60)->[rear]
+** waiting queue: 
+[child] pid: 870, remaining cpu_burst[1]: 60
+
+$ 191th(st, nd, rd) time-tick!
+** ready queue: (870,60)->(874,291)->[rear]
+** waiting queue: 
+[child] pid: 874, remaining cpu_burst[1]: 291
+
+$ 192th(st, nd, rd) time-tick!
+[parent] child of 870 is DONE, waiting time: 15886
+[child] pid: 870, remaining cpu_burst[1]: 0
+** ready queue: (874,291)->[rear]
+870 child process is done!
+** waiting queue: 
+
+$ 193th(st, nd, rd) time-tick!
+** ready queue: (874,191)->[rear]
+** waiting queue: 
+[child] pid: 874, remaining cpu_burst[1]: 191
+
+$ 194th(st, nd, rd) time-tick!
+** ready queue: (874,91)->[rear]
+** waiting queue: 
+[child] pid: 874, remaining cpu_burst[1]: 91
+
+$ 195th(st, nd, rd) time-tick!
+[parent] child of 874 is DONE, waiting time: 15701
+[child] pid: 874, remaining cpu_burst[1]: 0
+874 child process is done!
+** ready queue: 
+** waiting queue: 
+
+$ 196th(st, nd, rd) time-tick!
+** ALL SCHEDULING DONE, time elapsed: 18825
+message queue is deleted !
