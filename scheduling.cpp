@@ -29,12 +29,17 @@ struct msg_buffer {     // message buffer for IPC
 class TaskStruct { // process control block
 public:
     pid_t pid, parent_pid;
+    unsigned int cpu_burst, io_burst;
     unsigned int state, priority;
-    unsigned int cpu_burst_time, io_burst_time;
+    // [state] 0: ready, 1: dispatch(running), 2: i/o waiting, 3: terminated
+    // [priority] for now, constant number 0 is assigned.
 
-    TaskStruct(pid_t pid, pid_t main_pid) {
-        this->pid = pid;
-        this->parent_pid = main_pid;
+    TaskStruct(pid_t _pid, pid_t _parent_pid, unsigned int _cpu_burst, unsigned int _io_burst) {
+        this->pid = _pid;
+        this->parent_pid = _parent_pid;
+        this->cpu_burst = _cpu_burst;
+        this->io_burst = _io_burst;
+        this->state = 0;
     }
 };
 
@@ -72,15 +77,35 @@ void initialize(key_t& main_key) {
     msg_que_id = msgget(main_key, IPC_CREAT|0666);
 
     // 3. set time quantum (unit: ms)
-    time_quantum = 250;
+    time_quantum = 100;
 }
 
-TaskStruct* createChild(pid_t parent_pid) {
-    pid_t pid = fork();
-    TaskStruct *pcb = new TaskStruct(pid, parent_pid);
+void createChildren(int num_of_child_process) {
+    pid_t main_pid = getpid();
 
-    pcb->cpu_burst_time = 600;
-    pcb->io_burst_time = 20;
+    for(int i=0;i<num_of_child_process;++i) {
+        if(getpid() == main_pid) {
+            // parent process
+            pid_t child_pid = fork();
+            if(child_pid > 0) {
+                // parent process
+                cout << i + 1 << "th process created, " << child_pid << endl;
+            }
+        }
+    }
+}
+
+bool alarm_signal = false;
+
+void timerHandler(int signum) {
+    static int alarm_cnt = 0;
+    ++alarm_cnt;
+
+    alarm_signal = true;
+}
+
+TaskStruct* createPCB(pid_t _pid, pid_t _parent_pid, unsigned int _cpu_burst, unsigned int _io_burst) {
+    TaskStruct *pcb = new TaskStruct(_pid, _parent_pid, _cpu_burst, _io_burst);
 
     DoublyLinkedList *ddl = new DoublyLinkedList;
     ddl->process_info = pcb;
@@ -92,36 +117,6 @@ TaskStruct* createChild(pid_t parent_pid) {
     ddl->right = rq_rear;
 
     return pcb;
-}
-
-TaskStruct* child_list[10]; // !! temporary keeping... (this will be deleted later).
-void createChildren() {
-    pid_t main_pid = getpid();
-
-    for(int i=0;i<10;++i) {
-        if(getpid() == main_pid) {
-            // parent process
-            child_list[i] = createChild(main_pid);
-            if(getpid() == main_pid) {
-                // parent process
-                // cout << i << "th process created, " << child_list[i]->pid <<  endl;
-            }
-        } else {
-            // child process
-            //break;
-            // cout << getpid() << ' ' << i << endl;
-        }
-    }
-    // cout << "hi from " << getpid() <<  endl;
-}
-
-bool alarm_signal = false;
-
-void timerHandler(int signum) {
-    static int alarm_cnt = 0;
-    ++alarm_cnt;
-
-    alarm_signal = true;
 }
 
 void parentProcess() {
@@ -164,6 +159,43 @@ void parentProcess() {
          cout << "ddl " << (it->process_info)->pid <<  endl;
     }*/
 
+    struct msg_buffer send_msg, recv_msg;
+
+    unsigned int process_cnt = 0;
+    while(process_cnt < 10) {
+        // reference 1 - https://pubs.opengroup.org/onlinepubs/7908799/xsh/msgrcv.html
+        // reference 2 - https://lacti.github.io/2011/01/08/different-between-size-t-ssize-t/
+        ssize_t msg_len = msgrcv(msg_que_id, &recv_msg, sizeof(recv_msg.msg_txt), getpid(), IPC_NOWAIT);
+
+        if(msg_len > 0) {
+            //cout << recv_msg.msg_txt << endl;
+            if(recv_msg.msg_txt[0] != 'R') {
+                continue;
+            }
+
+            string tmp_txt = recv_msg.msg_txt;
+            string::size_type pos;
+            pos = tmp_txt.find(",");
+            pid_t child_pid = stoi(tmp_txt.substr(1, pos - 1));
+            unsigned int _cpu_burst, _io_burst;
+            tmp_txt = tmp_txt.substr(pos+1);
+            pos = tmp_txt.find(",");
+            _cpu_burst = stoi(tmp_txt.substr(0, pos));
+            _io_burst = stoi(tmp_txt.substr(pos+1));
+            //cout << "child_pid: " << child_pid << " cpu_burst: " << _cpu_burst << " io_burst: " << _io_burst << endl;
+            TaskStruct *pcb = createPCB(child_pid, getpid(), _cpu_burst, _io_burst);
+            cout << pcb->pid << " is registered!" << endl;
+
+            process_cnt ++;
+        }
+    }
+
+    cout << "initial status of ready queue" << endl;
+    for(DoublyLinkedList *it = rq_front->right; it != rq_rear; it = it->right) {
+        TaskStruct *ts = it->process_info;
+        cout << "RQ: " << ts->pid << " " << ts->cpu_burst << " " << ts->io_burst << endl;
+    }
+
     int cnt = 0;
     while(true) {
         if(alarm_signal) {
@@ -184,15 +216,14 @@ void parentProcess() {
 
             DoublyLinkedList *dispatched_task_ptr = rq_front->right;
             TaskStruct *dispatched_task = dispatched_task_ptr->process_info;
-            struct msg_buffer send_msg;
             send_msg.msg_type = dispatched_task->pid;
-            string tmp_txt = "remain cpu burst is " + to_string(dispatched_task->cpu_burst_time);
+            string tmp_txt = "remain cpu burst is " + to_string(dispatched_task->cpu_burst);
             strncpy(send_msg.msg_txt, tmp_txt.c_str(), tmp_txt.length() + 1);
 
-            cout << "snd " << msg_que_id << ' ' << send_msg.msg_type << ' ' << send_msg.msg_txt <<  endl;
+            //cout << "snd " << msg_que_id << ' ' << send_msg.msg_type << ' ' << send_msg.msg_txt <<  endl;
             msgsnd(msg_que_id, &send_msg, sizeof(send_msg.msg_txt), IPC_NOWAIT);
 
-            dispatched_task->cpu_burst_time -= time_quantum;
+            dispatched_task->cpu_burst -= time_quantum;
             // modify later: upper code to change burst time when receive ACK from child process.
 
             rq_front->right = rq_front->right->right;
@@ -207,8 +238,9 @@ void parentProcess() {
     }
 }
 
-void childProcess() {       
+void childProcess(pid_t parent_pid) {       
     //  child process TODOs
+    //  0. process register to parent process
     //  1. infinite-loop
     //  2. receive IPC messages from parent process, decrease CPU burst time.
     //
@@ -219,8 +251,34 @@ void childProcess() {
 
     pid_t my_pid = getpid();
 
-    struct msg_buffer recv_msg;
+    struct msg_buffer send_msg, recv_msg;
 
+    // TODO 0 - process register to parent process
+    // Though fork() is executed in parent process,
+    // child process have to send cpu_burst and io_burst values to parent process immediately.
+
+    // random number generator - reference: https://modoocode.com/304
+    random_device rd0; // , rd1;
+    mt19937 gen0(rd0()); // , gen1(rd1());
+    uniform_int_distribution<int> rand_distrib0(0, 999), rand_distrib1(0, 99);
+    // cpu_burst range to [0, 1000), io_burst range to [0, 100).
+
+    unsigned int cpu_burst, io_burst;
+    cpu_burst = rand_distrib0(gen0);
+    io_burst = rand_distrib1(gen0);
+    cout << "* burst time generated: " << getpid() << " " << cpu_burst << " " << io_burst << endl;
+
+    // [Register] message(msg_txt) format:
+    // Rmy_pid,cpu_burst,io_burst
+    // ex. my_pid = 55302, cpu_burst = 550, io_burst = 30
+    // "R55302,550,30"
+
+    send_msg.msg_type = parent_pid;
+    string tmp_txt = "R" + to_string(getpid()) + "," + to_string(cpu_burst) + "," + to_string(io_burst) + '\0';
+    strncpy(send_msg.msg_txt, tmp_txt.c_str(), tmp_txt.length());
+    msgsnd(msg_que_id, &send_msg, sizeof(send_msg.msg_txt), IPC_NOWAIT);
+
+    // TODO 1 - infinite-loop
     while(true) {
         // reference 1 - https://pubs.opengroup.org/onlinepubs/7908799/xsh/msgrcv.html
         // reference 2 - https://lacti.github.io/2011/01/08/different-between-size-t-ssize-t/
@@ -229,9 +287,17 @@ void childProcess() {
         // cout << "rcv " << msg_len <<  endl;
 
         if(msg_len > 0) {
-            // receive something from parent process !!
+            // receive something from parent process !! -> means SCHEDULED now!
+            cout << "recv: " << getpid() << ": " << recv_msg.msg_txt <<  endl;
 
-             cout << "recv: " << getpid() << ": " << recv_msg.msg_txt <<  endl;
+            // TODO 2 - decrease cpu_burst
+            //
+            //
+
+
+            // TODO 3- i/o request to parent process
+            // [I/O] message(msg_txt) format:
+            // "I"
         }
     }
 }
@@ -239,32 +305,28 @@ void childProcess() {
 
 int main() {
     pid_t main_pid = getpid();
-     cout << "main_pid is " << main_pid <<  endl;
+    cout << "main_pid is " << main_pid <<  endl;
 
     key_t main_key;
     initialize(main_key);
 
-    // random number generator - reference: https://modoocode.com/304
-     random_device rd0;
-     mt19937 gen(rd0());
-     uniform_int_distribution<int> rand_distrib(0, 999);
-
-    createChildren();
+    const unsigned int num_of_child_process = 10;
+    createChildren(num_of_child_process);
     if(getpid() == main_pid) {
         // parent process
         //wait(NULL);
         /*
         for(int i=0;i<10;++i) {
-             cout << child_list[i]->pid << ' ';
+            cout << child_list[i]->pid << ' ';
         }
-         cout <<  endl;
+        cout <<  endl;
 */
         parentProcess();
     } else {
         // child process
-        // cout << getpid() <<  endl;
+        //cout << getpid() <<  endl;
 
-        childProcess();
+        childProcess(main_pid);
     }
 
     return 0;
