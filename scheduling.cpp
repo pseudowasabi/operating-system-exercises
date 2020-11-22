@@ -101,11 +101,7 @@ void createChildren(int num_of_child_process) {
 }
 
 bool alarm_signal = false;
-
 void timerHandler(int signum) {
-    static int alarm_cnt = 0;
-    ++alarm_cnt;
-
     alarm_signal = true;
 }
 
@@ -145,6 +141,33 @@ void stringParsing(string& msg_txt, char& type, pid_t& pid_info, void *data_0, v
     }
 }
 
+void processWaitingQueue(unsigned int time_quantum) {
+    for(DoublyLinkedList *it=wq_front->right; it != wq_rear; it = it->right) {
+        TaskStruct *pcb = it->process_info;
+
+        if(pcb->io_burst > time_quantum) {
+            pcb->io_burst -= time_quantum;
+        } else {
+            // delete from waiting queue
+            DoublyLinkedList *it_backup = it;
+            it->left->right = it->right;
+            it->right->left = it->left;
+            it = it->left;
+
+            // if cpu_burst remains, moves to ready queue.
+            // if not, terminate process. 
+            cout << pcb->pid << " io_burst is 0.\n";
+            pcb->io_burst = 0;
+            pcb->state = 3;     // terminate.
+        }
+    }
+
+    for(DoublyLinkedList *it=wq_front->right; it != wq_rear; it = it->right) {
+        cout << "(" << it->process_info->pid << "," << it->process_info->io_burst << ")->";
+    }
+    cout << endl;
+}
+
 void parentProcess(unsigned int msg_que_id, unsigned int time_quantum) {
     //  PARENT PROCESS is like an OPERATING SYSTEM which controls process-scheduling.
     //  parent process TODOs
@@ -163,7 +186,7 @@ void parentProcess(unsigned int msg_que_id, unsigned int time_quantum) {
     //  8. decrease time of all processes in I/O queue (waiting queue).
     //  9. ++ multiple queue (MLFQ based on priority)
 
-    cout << "here is parent " << getpid() << endl;
+    //cout << "here is parent " << getpid() << endl;
 
     // setting a timer (time quantum to 250 ms at first).
     // reference - https://linuxspot.tistory.com/28
@@ -192,6 +215,10 @@ void parentProcess(unsigned int msg_que_id, unsigned int time_quantum) {
     }*/
 
     struct msg_buffer send_msg, recv_msg;
+    string tmp_txt;
+    char type;
+    pid_t child_pid;
+    size_t pcb_address;
 
     unsigned int process_cnt = 0;
     while(process_cnt < 10) {
@@ -204,9 +231,7 @@ void parentProcess(unsigned int msg_que_id, unsigned int time_quantum) {
             if(recv_msg.msg_txt[0] != 'R') {
                 continue;
             }
-            string tmp_txt = recv_msg.msg_txt;
-            char type;
-            pid_t child_pid;
+            tmp_txt = recv_msg.msg_txt;
             unsigned int _cpu_burst, _io_burst;
             stringParsing(tmp_txt, type, child_pid, &_cpu_burst, &_io_burst);
             
@@ -282,10 +307,32 @@ void parentProcess(unsigned int msg_que_id, unsigned int time_quantum) {
                 // parent process receives IPC message when remaining cpu burst time of child process becomes 0.
             }
 
+            processWaitingQueue(time_quantum);  // decrease i/o burst of each pcb in waiting queues.
+
             //  check there is IPC message from child process.
             //  then move each process to i/o waiting queue.
             //
-            //
+            while(true) {
+                ssize_t msg_len = msgrcv(msg_que_id, &recv_msg, sizeof(recv_msg.msg_txt), getpid(), IPC_NOWAIT);
+                if(msg_len <= 0) {
+                    break;
+                }
+                //cout << recv_msg.msg_txt << endl;
+                
+                tmp_txt = recv_msg.msg_txt;
+                unsigned int _io_burst;
+                stringParsing(tmp_txt, type, child_pid, &_io_burst, &pcb_address);
+                //cout << "type: " << type << ", child_pid: " << child_pid << ", io_burst: " << _io_burst << ", pcb_address: " << pcb_address << endl;
+
+                DoublyLinkedList *dispatched_task_1_ptr = (DoublyLinkedList *)pcb_address;
+                TaskStruct *dispatched_task_1 = dispatched_task_1_ptr->process_info;
+                dispatched_task_1->state = 2;
+                // rl->task->r
+                wq_rear->left->right = dispatched_task_1_ptr;
+                wq_rear->left = dispatched_task_1_ptr;
+                dispatched_task_1_ptr->left = wq_rear->left;
+                dispatched_task_1_ptr->right = wq_rear;
+            }
         }
     }
 
