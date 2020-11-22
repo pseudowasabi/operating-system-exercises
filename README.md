@@ -1,14 +1,13 @@
 ## OS Term project #1 [ scheduling.cpp / schedule_dump.txt ]
----  
   
-### 구현 사항
+### ✔ 구현 사항
 - TaskStruct, DoublyLinkedList: 공룡 책에 나오는 task_struct를 모방하여 정의한 PCB와 연결 리스트
 - initialize() 함수에서 time_quantum 설정 가능 (현재 설정 값 = 100 ms)
 - parent 프로세스는 scheduling을 담당하는 OS의 역할이고, fork한 child 프로세스는 OS에서 실행되는 실제 프로세스의 역할
 - 각 child 프로세스의 **i/o burst는 1회**씩 있는 것으로 가정 (프로세스별 실행 순서는 **cpu burst 0 -> i/o burst -> cpu burst 1**)
 - priority에 기반한 MLFQ는 추후 추가적으로 구현해볼 예정
 
-### 코드의 전체적인 동작 순서 (scheduling.cpp)
+### ✔ 코드의 전체적인 동작 순서 (scheduling.cpp)
 1. main 함수에서 createChildren() 함수 호출로 10개의 child 프로세스를 fork한다. (line 552)
 2. parentProcess()와 childProcess()가 각각 parent 프로세스, child 프로세스를 담당한다.
 3. fork된 child 프로세스들은 uniform_int_distribution&#60;int&#62;에 따라 random한 burst time을 생성한다. (line 451~456)
@@ -23,7 +22,7 @@
 12. i/o queue는 하나의 queue 안에 들어있지만 사실상 각각 다른 i/o를 의미하는 것으로 가정하고, 매 time quantum마다 그 값만큼 remaining i/o burst time을 병렬적으로 빼 준다. (line 179~183)
 13. 만약 remaining burst time이 0이 된다면, **waiting queue에서 제거 후 다시 ready queue로**(이후 cb_flag = 1, 즉 cpu_burst&#91;1&#93;에 해당하는 각 프로세스별 두 번째 cpu_burst scheduling 수행) 집어 넣는다. (line 184~201)
 
-### 결과 텍스트 파일 읽는 법 (schedule_dump.txt)
+### ✔ 결과 텍스트 파일 읽는 법 (schedule_dump.txt)
 - main_pid, _th process created, message queue id 출력은 main 함수와 createChildren() 함수에서 출력한다.
 - &#42; burst time generated (format...)은 childProcess() 에서 random한 burst time을 생성한 것이다.
 - child pid: ...부터, ... is registered! 까지는 parentProcess() 에서 IPC message를 받은 후 PCB를 생성 한 후 남기는 log이다.
