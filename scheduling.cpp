@@ -1,8 +1,16 @@
 // OS Term Project #1 by Yoseob Kim
 // Simple scheduling (with Round-Robin)
-// Environments: MBP(13-inch, 2017, Two Thunderbolt 3 ports, Intel Core i5)
-//                  (https://support.apple.com/kb/SP754?locale=ko_KR)
-//                  (os version: macOS Catalina (10.15.6))
+// Develop environments:    MBP(13-inch, 2017, Two Thunderbolt 3 ports, Intel Core i5)
+//                          (https://support.apple.com/kb/SP754?locale=ko_KR)
+//                          (os version: macOS Catalina (10.15.6))
+// Test environments        0 - same as develop environments
+//                          1 - WSL2, Ubuntu 20.04.1 LTS
+
+// ** Important NOTICE **
+// When IPC is not working properly, 
+// run zsh(or bash) shell and type "ipcs" then check "msqid", 
+// then type "ipcrm -q ${msqid}" and re-excute this program(./scheduling.out).
+// reference - https://iamhjoo.tistory.com/4
 
 // Headers from ./signaling.c and ./message_passing.c
 // Reference - https://www.geeksforgeeks.org/ipc-using-message-queues/
@@ -74,7 +82,7 @@ void initialize(key_t& main_key, unsigned int& msg_que_id, unsigned int& time_qu
     msg_que_id = msgget(main_key, IPC_CREAT|0666);
 
     // 3. set time quantum (unit: ms)
-    time_quantum = 100;
+    time_quantum = 250;
 }
 
 void createChildren(int num_of_child_process) {
@@ -261,15 +269,14 @@ void parentProcess(unsigned int msg_que_id, unsigned int time_quantum) {
             dispatched_task->state = 1;
             dispatched_task->cpu_burst -= _time_quantum;
 
-            // rl->task->r
-            rq_rear->left->right = dispatched_task_ptr;
-            rq_rear->left = dispatched_task_ptr;
-            dispatched_task_ptr->left = rq_rear->left;
-            dispatched_task_ptr->right = rq_rear;
-            dispatched_task->state = 0;
-
             if(dispatched_task->cpu_burst > 0){
                 // re-insert current process if not finished yet.
+                // rl->task->r
+                rq_rear->left->right = dispatched_task_ptr;
+                rq_rear->left = dispatched_task_ptr;
+                dispatched_task_ptr->left = rq_rear->left;
+                dispatched_task_ptr->right = rq_rear;
+                dispatched_task->state = 0;
             } else {
                 // no remaining cpu_burst -> moves to i/o waiting queue in start of next time quantum.
                 // parent process receives IPC message when remaining cpu burst time of child process becomes 0.
@@ -393,6 +400,7 @@ int main() {
         }
         cout <<  endl;
 */
+        cout << "message queue id is " << msg_que_id << endl;
         parentProcess(msg_que_id, time_quantum);
     } else {
         // child process
