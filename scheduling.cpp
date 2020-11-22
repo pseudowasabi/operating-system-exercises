@@ -82,7 +82,7 @@ void initialize(key_t& main_key, unsigned int& msg_que_id, unsigned int& time_qu
     msg_que_id = msgget(main_key, IPC_CREAT|0666);
 
     // 3. set time quantum (unit: ms)
-    time_quantum = 250;
+    time_quantum = 100;
 }
 
 void createChildren(int num_of_child_process) {
@@ -288,6 +288,9 @@ void parentProcess(unsigned int msg_que_id, unsigned int time_quantum) {
             //
         }
     }
+
+    msgctl(msg_que_id, IPC_RMID, NULL); // delete message queue
+    cout << "message queue is deleted !\n";
 }
 
 void childProcess(pid_t parent_pid, unsigned int msg_que_id) {
@@ -315,6 +318,7 @@ void childProcess(pid_t parent_pid, unsigned int msg_que_id) {
     mt19937 gen0(rd0()); // , gen1(rd1());
     uniform_int_distribution<int> rand_distrib0(0, 999), rand_distrib1(0, 99);
     // cpu_burst range to [0, 1000), io_burst range to [0, 100).
+    size_t pcb_address;
 
     unsigned int cpu_burst, io_burst;
     cpu_burst = rand_distrib0(gen0);
@@ -330,10 +334,10 @@ void childProcess(pid_t parent_pid, unsigned int msg_que_id) {
     string tmp_txt = "R" + to_string(getpid()) + "," + to_string(cpu_burst) + "," + to_string(io_burst) + '\0';
     strncpy(send_msg.msg_txt, tmp_txt.c_str(), tmp_txt.length() + 1);
     msgsnd(msg_que_id, &send_msg, sizeof(send_msg.msg_txt), IPC_NOWAIT);
-    std::cout << getpid() << " " << send_msg.msg_type << " " << send_msg.msg_txt << " sent!\n";
+    //std::cout << getpid() << " " << send_msg.msg_type << " " << send_msg.msg_txt << " sent!\n";
 
     // TODO 1 - infinite-loop
-    while(cpu_burst) {
+    while(cpu_burst > 0) {
         // reference 1 - https://pubs.opengroup.org/onlinepubs/7908799/xsh/msgrcv.html
         // reference 2 - https://lacti.github.io/2011/01/08/different-between-size-t-ssize-t/
         ssize_t msg_len = msgrcv(msg_que_id, &recv_msg, sizeof(recv_msg.msg_txt), getpid(), IPC_NOWAIT);
@@ -348,10 +352,9 @@ void childProcess(pid_t parent_pid, unsigned int msg_que_id) {
             char type;
             pid_t _0;
             unsigned int _time_quantum;
-            size_t pcb_address;
 
             stringParsing(tmp_txt, type, _0, &_time_quantum, &pcb_address);
-            cout << "recv: " << getpid() << " " << type << " " << _time_quantum << endl;
+            cout << "recv: " << getpid() << " " << type << " " << _time_quantum << " " << cpu_burst << endl;
 
             // TODO 2 - decrease cpu_burst
             
@@ -364,16 +367,17 @@ void childProcess(pid_t parent_pid, unsigned int msg_que_id) {
             //dispatched_task->cpu_burst -= _time_quantum;
             
             // pcb access by parent, child process concurrently --> error occurs!
-
-            // TODO 3- i/o request to parent process
-            // [I/O] message(msg_txt) format:
-            // "Imy_pid,io_burst,pcb_address"
-            tmp_txt = "I" + to_string(my_pid) + "," + to_string(io_burst) + "," + to_string(pcb_address) + '\0';
-            strncpy(send_msg.msg_txt, tmp_txt.c_str(), tmp_txt.length() + 1);
-
-            msgsnd(msg_que_id, &send_msg, sizeof(send_msg.msg_txt), IPC_NOWAIT);
         }
     }
+
+    // TODO 3- i/o request to parent process
+    // [I/O] message(msg_txt) format:
+    // "Imy_pid,io_burst,pcb_address"
+    tmp_txt = "I" + to_string(my_pid) + "," + to_string(io_burst) + "," + to_string(pcb_address) + '\0';
+    strncpy(send_msg.msg_txt, tmp_txt.c_str(), tmp_txt.length() + 1);
+
+    msgsnd(msg_que_id, &send_msg, sizeof(send_msg.msg_txt), IPC_NOWAIT);
+    cout << getpid() << "cpu_burst done!\n";
 
     // local io_burst value is not updated.
     // however, after cpu_burst become 0, above while loop terminated,
