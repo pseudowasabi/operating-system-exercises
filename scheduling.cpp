@@ -82,7 +82,7 @@ void initialize(key_t& main_key, unsigned int& msg_que_id, unsigned int& time_qu
     msg_que_id = msgget(main_key, IPC_CREAT|0666);
 
     // 3. set time quantum (unit: ms)
-    time_quantum = 100;
+    time_quantum = 500;
 }
 
 void createChildren(int num_of_child_process) {
@@ -113,8 +113,8 @@ TaskStruct* createPCB(pid_t _pid, pid_t _parent_pid, unsigned int _cpu_burst, un
 
     // rl->ddl->r
     rq_rear->left->right = ddl;
-    rq_rear->left = ddl;
     ddl->left = rq_rear->left;
+    rq_rear->left = ddl;
     ddl->right = rq_rear;
 
     return pcb;
@@ -148,17 +148,18 @@ void processWaitingQueue(unsigned int time_quantum) {
         if(pcb->io_burst > time_quantum) {
             pcb->io_burst -= time_quantum;
         } else {
-            // delete from waiting queue
-            DoublyLinkedList *it_backup = it;
-            it->left->right = it->right;
-            it->right->left = it->left;
-            it = it->left;
-
             // if cpu_burst remains, moves to ready queue.
+            DoublyLinkedList *it_backup = it;
+            
             // if not, terminate process. 
             cout << pcb->pid << " io_burst is 0.\n";
             pcb->io_burst = 0;
             pcb->state = 3;     // terminate.
+
+            // delete from waiting queue
+            it->left->right = it->right;
+            it->right->left = it->left;
+            it = it->left;
         }
     }
 
@@ -263,48 +264,48 @@ void parentProcess(unsigned int msg_que_id, unsigned int time_quantum) {
                 if(wq_front->right == wq_rear) {
                     break;  // whole cpu scheduling is done.
                 }
-
-                continue;   // wait until i/o waiting is done.
             }
 
-            DoublyLinkedList *dispatched_task_ptr = rq_front->right;
-            TaskStruct *dispatched_task = dispatched_task_ptr->process_info;
-            send_msg.msg_type = dispatched_task->pid;
+            if(rq_front->right != rq_rear) {
+                DoublyLinkedList *dispatched_task_ptr = rq_front->right;
+                TaskStruct *dispatched_task = dispatched_task_ptr->process_info;
+                send_msg.msg_type = dispatched_task->pid;
 
-            // [Dispatch] message format
-            // Dchild_pid,time_quantum,pcb_address
-            unsigned int _time_quantum;     // _time_quantum is real time quantum assigned to each child process.
+                // [Dispatch] message format
+                // Dchild_pid,time_quantum,pcb_address
+                unsigned int _time_quantum;     // _time_quantum is real time quantum assigned to each child process.
 
-            if(dispatched_task->cpu_burst < time_quantum) {
-                _time_quantum = dispatched_task->cpu_burst;
-                time_diff += (time_quantum - _time_quantum);
-            } else {
-                _time_quantum = time_quantum;
-            }
+                if(dispatched_task->cpu_burst < time_quantum) {
+                    _time_quantum = dispatched_task->cpu_burst;
+                    time_diff += (time_quantum - _time_quantum);
+                } else {
+                    _time_quantum = time_quantum;
+                }
 
-            unsigned int _cpu_burst = dispatched_task->cpu_burst;
-            string tmp_txt = "D" + to_string(dispatched_task->pid) + "," + to_string(_time_quantum) + "," + to_string((size_t)dispatched_task_ptr) + '\0';
-            strncpy(send_msg.msg_txt, tmp_txt.c_str(), tmp_txt.length() + 1);
+                unsigned int _cpu_burst = dispatched_task->cpu_burst;
+                string tmp_txt = "D" + to_string(dispatched_task->pid) + "," + to_string(_time_quantum) + "," + to_string((size_t)dispatched_task_ptr) + '\0';
+                strncpy(send_msg.msg_txt, tmp_txt.c_str(), tmp_txt.length() + 1);
 
-            msgsnd(msg_que_id, &send_msg, sizeof(send_msg.msg_txt), IPC_NOWAIT);
+                msgsnd(msg_que_id, &send_msg, sizeof(send_msg.msg_txt), IPC_NOWAIT);
 
-            // delete from ready queue
-            rq_front->right = rq_front->right->right;
-            rq_front->right->left = rq_front;
-            dispatched_task->state = 1;
-            dispatched_task->cpu_burst -= _time_quantum;
+                // delete from ready queue
+                rq_front->right = rq_front->right->right;
+                rq_front->right->left = rq_front;
+                dispatched_task->state = 1;
+                dispatched_task->cpu_burst -= _time_quantum;
 
-            if(dispatched_task->cpu_burst > 0){
-                // re-insert current process if not finished yet.
-                // rl->task->r
-                rq_rear->left->right = dispatched_task_ptr;
-                rq_rear->left = dispatched_task_ptr;
-                dispatched_task_ptr->left = rq_rear->left;
-                dispatched_task_ptr->right = rq_rear;
-                dispatched_task->state = 0;
-            } else {
-                // no remaining cpu_burst -> moves to i/o waiting queue in start of next time quantum.
-                // parent process receives IPC message when remaining cpu burst time of child process becomes 0.
+                if(dispatched_task->cpu_burst > 0){
+                    // re-insert current process if not finished yet.
+                    // rl->task->r
+                    rq_rear->left->right = dispatched_task_ptr;
+                    dispatched_task_ptr->left = rq_rear->left;
+                    rq_rear->left = dispatched_task_ptr;
+                    dispatched_task_ptr->right = rq_rear;
+                    dispatched_task->state = 0;
+                } else {
+                    // no remaining cpu_burst -> moves to i/o waiting queue in start of next time quantum.
+                    // parent process receives IPC message when remaining cpu burst time of child process becomes 0.
+                }    
             }
 
             processWaitingQueue(time_quantum);  // decrease i/o burst of each pcb in waiting queues.
@@ -329,8 +330,8 @@ void parentProcess(unsigned int msg_que_id, unsigned int time_quantum) {
                 dispatched_task_1->state = 2;
                 // rl->task->r
                 wq_rear->left->right = dispatched_task_1_ptr;
+                dispatched_task_1_ptr->left = wq_rear->left;    // ...
                 wq_rear->left = dispatched_task_1_ptr;
-                dispatched_task_1_ptr->left = wq_rear->left;
                 dispatched_task_1_ptr->right = wq_rear;
             }
         }
@@ -363,7 +364,7 @@ void childProcess(pid_t parent_pid, unsigned int msg_que_id) {
     // random number generator - reference: https://modoocode.com/304
     random_device rd0; // , rd1;
     mt19937 gen0(rd0()); // , gen1(rd1());
-    uniform_int_distribution<int> rand_distrib0(0, 999), rand_distrib1(0, 99);
+    uniform_int_distribution<int> rand_distrib0(0, 2999), rand_distrib1(0, 999);
     // cpu_burst range to [0, 1000), io_burst range to [0, 100).
     size_t pcb_address;
 
